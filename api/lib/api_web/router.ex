@@ -29,6 +29,10 @@ defmodule ApiWeb.Router do
     put "/users/:userID", RollController, :putUser
     put "/working_times/:workingTimeId", RollController, :putWorkingTime
     post "/working_times", RollController, :postWorkingTime
+    delete "/users/:userID", RollController, :deleteUser
+    get "/workingtimes/:userID", RollController, :getAllWorktimes
+    get "/workingtimes/:userID/:id", RollController, :getWorktimesByID
+    delete "/workingtimes/:id", RollController, :deleteWorkingTime
   end
   # Enables LiveDashboard only for development
   #

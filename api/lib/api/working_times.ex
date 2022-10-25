@@ -5,6 +5,7 @@ defmodule Api.WorkingTimes do
   alias Api.WorkingTimes
   alias Api.Repo
 
+  @derive {Jason.Encoder, only: [:id, :start, :end, :user]}
   schema "workingtimes" do
     field :end, :utc_datetime
     field :start, :utc_datetime
