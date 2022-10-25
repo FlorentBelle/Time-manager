@@ -18,6 +18,7 @@ defmodule Api.User do
     user
     |> cast(attrs, [:username, :email])
     |> validate_required([:username, :email])
+    |> validate_length(:username, min: 2)
     |> validate_format(:email, ~r/@/)
   end
 
