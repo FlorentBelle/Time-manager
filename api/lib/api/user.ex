@@ -1,5 +1,7 @@
 defmodule Api.User do
   use Ecto.Schema
+
+  import Ecto.Query
   import Ecto.Changeset
 
   alias Api.User
@@ -9,6 +11,8 @@ defmodule Api.User do
   schema "users" do
     field :email, :string
     field :username, :string
+    has_many :working_times, Api.WorkingTimes
+    has_many :clocks, Api.Clocks
 
     timestamps()
   end
@@ -22,12 +26,28 @@ defmodule Api.User do
     |> validate_format(:email, ~r/@/)
   end
 
+  def create_user(attrs \\ %{}) do
+    %User{}
+    |> User.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  def get_user(id), do: Repo.get(User, id)
+
   def get_user!(id), do: Repo.get!(User, id)
+
+  def get_all_users(), do: Repo.all(User)
+
+  def get_queried_users(email, username), do: Repo.one(from u in User, where: ilike(u.email, ^email), where: ilike(u.username, ^username))
 
   def update_user(%User{} = user, attrs) do
     user
     |> User.changeset(attrs)
     |> Repo.update()
+  end
+
+  def delete_user(%User{} = user) do
+    user |> Repo.delete()
   end
 
 end

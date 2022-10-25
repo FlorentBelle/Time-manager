@@ -1,11 +1,17 @@
 defmodule Api.Clocks do
   use Ecto.Schema
-  import Ecto.Changeset
 
+  import Ecto.Changeset
+  import Ecto.Query
+
+  alias Api.Clocks
+  alias Api.Repo
+
+  @derive {Jason.Encoder, only: [:id, :status, :time, :user]}
   schema "clocks" do
     field :status, :boolean, default: false
     field :time, :utc_datetime
-    field :user, :id
+    belongs_to :user, Api.User
 
     timestamps()
   end
@@ -16,4 +22,14 @@ defmodule Api.Clocks do
     |> cast(attrs, [:time, :status])
     |> validate_required([:time, :status])
   end
+
+  def create_clock(attrs \\ %{}) do
+    %Clocks{}
+    |> Clocks.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  def get_clock(id), do: Repo.get(Clocks, id)
+
+  def get_clock!(id), do: Repo.get!(Clocks, id)
 end
