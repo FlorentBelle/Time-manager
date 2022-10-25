@@ -1,10 +1,6 @@
 defmodule HelloWeb.RollController do
   use HelloWeb, :controller
 
-  def getUserWithParams(conn, params) do
-    render(conn, "getUserWithParams.json", id: params)
-  end
-
   def getAllUsers(conn, params) do
     render(conn, "getAllUsers.json", params: params)
   end
@@ -21,4 +17,23 @@ defmodule HelloWeb.RollController do
     render(conn, "putUser.json", params: params)
   end
 
+  def deleteUser(conn, params) do
+    render(conn, "deleteUser.json", params: params)
+  end
+
+  def getAllWorktimes(conn, params) do
+    render(conn, "getAllWorktimes.json", params: params)
+  end
+
+  def getWorktimesByID(conn, params) do
+    render(conn, "getWorktimesByID.json", params: params)
+  end
+
+  def postWorkingTimes(conn, params) do
+    render(conn, "postWorkingTimes.json", params: params)
+  end
+
+  def deleteWorkingTime(conn, params) do
+    render(conn, "deleteWorkingTime.json", params: params)
+  end
 end

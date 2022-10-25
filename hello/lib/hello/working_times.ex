@@ -2,6 +2,7 @@ defmodule Hello.WorkingTimes do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @derive {Jason.Encoder, only: [:id, :start, :end, :user]}
   schema "workingtimes" do
     field :end, :utc_datetime
     field :start, :utc_datetime

@@ -24,10 +24,16 @@ defmodule HelloWeb.Router do
   scope "/api", HelloWeb do
     pipe_through :api
     get "/users", RollController, :getAllUsers
-    get "/users/:email/:username", RollController, :getUserWithParams
     get "/users/:userID", RollController, :getUserWithID
     post "/users" , RollController, :postUser
     put "/users/:userID", RollController, :putUser
+    delete "/users/:userID", RollController, :deleteUser
+
+    get "/workingtimes/:userID", RollController, :getAllWorktimes
+    get "/workingtimes/:userID/:id", RollController, :getWorktimesByID
+    post "/workingtimes/:userID" , RollController, :postWorkingTimes
+    delete "/workingtimes/:id", RollController, :deleteWorkingTime
+
   end
 
   # Enables LiveDashboard only for development
