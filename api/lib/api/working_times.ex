@@ -21,12 +21,4 @@ defmodule Api.WorkingTimes do
     |> validate_required([:start, :end])
   end
 
-  def get_working_time!(id), do: Repo.get!(WorkingTimes, id)
-
-  def update_working_time(%WorkingTimes{} = user, attrs) do
-    user
-    |> WorkingTimes.changeset(attrs)
-    |> Repo.update()
-  end
-
 end

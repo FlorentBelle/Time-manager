@@ -27,5 +27,4 @@ defmodule ApiWeb.ClocksController do
       conn |> render(ApiWeb.ErrorView, "error.json", %{status: "403", error: "No clock found"})
     end
   end
-
 end

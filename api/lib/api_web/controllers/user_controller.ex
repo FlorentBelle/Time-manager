@@ -1,43 +1,61 @@
 defmodule ApiWeb.UserController do
   use ApiWeb, :controller
 
-  alias Api.User
+  import Ecto.Query
 
-  def create(conn, params) do
+  alias Api.User
+  alias Api.Repo
+
+  def create(conn, %{ "email" => email, "username" => username } = params) do
     case params |> User.create_user() do
-      {:ok, %User{} = _user} -> conn |> render(ApiWeb.UserView, "create_user.json", %{status: "201", success: true, message: "User created"})
-      _ -> conn |> render(ApiWeb.ErrorView, "error.json", %{status: "500", error: "Interal Server Error"})
+      {:ok, %User{} = _user} ->
+        conn |> render(ApiWeb.UserView, "post_user.json", %{status: 201, success: true, message: "User created"})
+      _ ->
+        if(Repo.exists?(from u in User, where: u.email == ^email)) do
+          conn |> render(ApiWeb.ErrorView, "error.json", %{status: 409, error: "User already exists"})
+        else
+          conn |> render(ApiWeb.ErrorView, "error.json", %{status: 500, error: "Interal Server Error. Canno't create user"})
+        end
     end
   end
 
-  def retrieveAll(conn, %{"username" => username, "email" => email}) do
-    user = User.get_queried_users(email, username)
-    conn |> render(ApiWeb.UserView, "get_users.json", %{status: "200", success: true, message: "User found", content: user})
-  end
-
-  def retrieveAll(conn, %{"username" => username}) do
-    conn |> render(ApiWeb.ErrorView, "error.json", %{status: "403", error: "Not enough query params provided"})
-  end
-
-  def retrieveAll(conn, %{"email" => email}) do
-    conn |> render(ApiWeb.ErrorView, "error.json", %{status: "403", error: "Not enough query params provided"})
-  end
-
   def retrieveAll(conn, params) do
-    conn |> render(ApiWeb.UserView, "get_users.json", %{status: "200", success: true, message: "Users found", content: User.get_all_users()})
-  end
+    email = params["email"]
+    username = params["username"]
 
-  def retrieveAll(conn, params) do
-    conn |> render(ApiWeb.ErrorView, "error.json", %{status: "403", error: "No user found"})
-  end
-
-  def retrieve(conn, params) do
-    id = String.to_integer(params["userID"])
-    conn |> render(ApiWeb.UserView, "get_users.json", %{status: "200", success: true, message: "User found", content: User.get_user(id)})
-  end
-
-  def retrieve(conn, params) do
-    conn |> render(ApiWeb.ErrorView, "error.json", %{status: "403", error: "No user found"})
+    if (username === nil || email === nil) do
+      if (username !== nil && email === nil) do
+        retrieved = Repo.all(from u in User, where: u.username == ^username)
+        if (retrieved !== nil && Enum.count(retrieved) !== 0) do
+          conn |> render(ApiWeb.UserView, "get_users.json", %{status: 200, success: true, message: "User matching the given username query retrieved", content: retrieved})
+        else
+          conn |> render(ApiWeb.ErrorView, "error.json", %{status: 403, error: "No user matching the given username query"})
+        end
+      else
+        if (email !== nil && username === nil) do
+          retrieved = Repo.all(from u in User, where: u.email == ^email)
+          if (retrieved !== nil && Enum.count(retrieved) !== 0) do
+            conn |> render(ApiWeb.UserView, "get_users.json", %{status: 200, success: true, message: "Users matching the given email query retrieved", content: retrieved})
+          else
+            conn |> render(ApiWeb.ErrorView, "error.json", %{status: 403, error: "No user matching the given email query"})
+          end
+        else
+          retrieved = Repo.all(User)
+          if(retrieved !== nil && Enum.count(retrieved) !== 0) do
+            conn |> render(ApiWeb.UserView, "get_users.json", %{status: 200, success: true, message: "All users retrieved", content: retrieved})
+          else
+            conn |> render(ApiWeb.ErrorView, "error.json", %{status: 403, error: "No user found"})
+          end
+        end
+      end
+    else
+      retrieved = Repo.all(from u in User, where: u.username >= ^username, where: u.email <= ^email)
+      if(retrieved !== nil && Enum.count(retrieved) !== 0) do
+        conn |> render(ApiWeb.UserView, "get_users.json", %{status: 200, success: true, message: "Users matching the given queries email and username retrieved", content: retrieved})
+      else
+        conn |> render(ApiWeb.ErrorView, "error.json", %{status: 403, error: "No user the given queries email and username"})
+      end
+    end
   end
 
   def update(conn, %{"id" => id, "email" => email, "username" => username}) do
@@ -54,7 +72,7 @@ defmodule ApiWeb.UserController do
     user = User.get_user!(id)
     if (user !== nil) do
       User.delete_user(user)
-      conn |> render(ApiWeb.UserView, "delete_user.json", %{status: "204", success: true, message: "User deleted"})
+      conn |> render(ApiWeb.UserView, "get_users.json", %{status: "204", success: true, message: "User deleted"})
     else
       conn |> render(ApiWeb.ErrorView, "error.json", %{status: "403", error: "No user found"})
     end

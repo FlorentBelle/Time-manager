@@ -22,6 +22,7 @@ defmodule Api.User do
     |> validate_required([:username, :email])
     |> validate_length(:username, min: 2)
     |> validate_format(:email, ~r/@/)
+    |> unique_constraint(:email)
   end
 
   def create_user(attrs \\ %{}) do
