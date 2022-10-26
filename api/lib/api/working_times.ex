@@ -9,7 +9,7 @@ defmodule Api.WorkingTimes do
   schema "workingtimes" do
     field :end, :utc_datetime
     field :start, :utc_datetime
-    belongs_to :user, Api.User
+    field :user, :id
 
     timestamps()
   end

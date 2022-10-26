@@ -36,6 +36,6 @@ defmodule ApiWeb.Router do
     delete "/workingtimes/:id", WorkingTimeController, :deleteWorkingTime
 
     post "/clocks", ClocksController, :create
-    get "/clocks/:userID/:id", ClocksController, :retrieve
+    get "/users/:userID/clocks/:id", ClocksController, :retrieve
   end
 end

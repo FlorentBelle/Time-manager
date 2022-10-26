@@ -11,8 +11,6 @@ defmodule Api.User do
   schema "users" do
     field :email, :string
     field :username, :string
-    has_many :working_times, Api.WorkingTimes
-    has_many :clocks, Api.Clocks
 
     timestamps()
   end
