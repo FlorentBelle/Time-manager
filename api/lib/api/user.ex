@@ -31,22 +31,4 @@ defmodule Api.User do
     |> Repo.insert()
   end
 
-  def get_user(id), do: Repo.get(User, id)
-
-  def get_user!(id), do: Repo.get!(User, id)
-
-  def get_all_users(), do: Repo.all(User)
-
-  def get_queried_users(email, username), do: Repo.one(from u in User, where: ilike(u.email, ^email), where: ilike(u.username, ^username))
-
-  def update_user(%User{} = user, attrs) do
-    user
-    |> User.changeset(attrs)
-    |> Repo.update()
-  end
-
-  def delete_user(%User{} = user) do
-    user |> Repo.delete()
-  end
-
 end

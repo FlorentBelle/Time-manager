@@ -58,12 +58,27 @@ defmodule ApiWeb.UserController do
     end
   end
 
-  def update(conn, %{"id" => id, "email" => email, "username" => username}) do
-    user = User.get_user!(id)
-    params = %{"email": email, "username": username}
-
-    with {:ok, %User{} = user} <- User.update_user(user, params) do
-      conn |> render(ApiWeb.UserView, "get_users.json", %{status: "201", success: true, message: "User updated", content: params})
+  def update(conn, params) do
+    id = params["userID"]
+    if(id !== nil) do
+      if (is_bitstring(id) || is_integer(id)) do
+        if(is_bitstring(id)) do
+          id = String.to_integer(id)
+        end
+        user = Repo.one(from u in User, where: u.id == ^id)
+        if(user !== nil) do
+          user
+          |> User.changeset(params)
+          |> Repo.update()
+          conn |> render(ApiWeb.UserView, "post_user.json", %{status: 201, success: true, message: "User updated", content: params})
+        else
+          conn |> render(ApiWeb.ErrorView, "error.json", status: 403, error: "No user found")
+        end
+      else
+        conn |> render(ApiWeb.ErrorView, "error.json", status: 403, error: "User id have to be integer or string type")
+      end
+    else
+      conn |> render(ApiWeb.ErrorView, "error.json", status: 404, error: "Route not found")
     end
   end
 
