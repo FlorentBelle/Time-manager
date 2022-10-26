@@ -82,14 +82,19 @@ defmodule ApiWeb.UserController do
     end
   end
 
-  def delete(conn, %{"id" => id}) do
-    newId = String.to_integer(id)
-    user = User.get_user!(id)
-    if (user !== nil) do
-      User.delete_user(user)
-      conn |> render(ApiWeb.UserView, "get_users.json", %{status: "204", success: true, message: "User deleted"})
+  def delete(conn, params) do
+    id = params["userID"]
+    if(id !== nil) do
+      id = String.to_integer(params["userID"])
+      user = Repo.one(from u in User, where: u.id == ^id)
+      if(user !== nil) do
+        Repo.delete(user)
+        conn |> render(ApiWeb.WorkingTimesView, "post_working_time.json", %{status: 204, success: true, message: "User deleted"})
+      else
+        conn |> render(ApiWeb.ErrorView, "error.json", status: 403, error: "No user found")
+      end
     else
-      conn |> render(ApiWeb.ErrorView, "error.json", %{status: "403", error: "No user found"})
+      conn |> render(ApiWeb.ErrorView, "error.json", status: 404, error: "Route not found")
     end
   end
 
