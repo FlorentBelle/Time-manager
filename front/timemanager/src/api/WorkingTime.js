@@ -11,7 +11,7 @@ export default {
         });
         return response.json()
     },
-    getOneWorkingTimesUser: async function() {
+    getOneWorkingTimesUser: async function(userId,workingTimeId) {
         const response = await fetch(`${Api}/workingtimes/${userId}/${workingTimeId}`, {
         mode: 'cors',
         headers: {
