@@ -1,4 +1,4 @@
 
-const API = "http://localhost:4000/api";
+const Api = "http://localhost:4000/api";
 
-export default {API};
+export default {Api};
