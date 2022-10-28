@@ -27,7 +27,8 @@ defmodule ApiWeb.WorkingTimeController do
   def retrieveAll(conn, params) do
     end_ = params["end"]
     start_ = params["start"]
-    userID = params["userId"]
+    userID = params["userID"]
+
 
     if ((start_ === nil || end_ === nil) && userID !== nil) do
       if (start_ !== nil) do
@@ -53,7 +54,11 @@ defmodule ApiWeb.WorkingTimeController do
         conn |> render(ApiWeb.WorkingTimesView, "get_working_time.json", %{status: 200, success: true, message: "All workingtime retrieved for the query parameters", content: retrieved})
       end
     end
-    if (is_integer(userID) &&  userID !== nil) do
+    if ((is_integer(userID) || is_bitstring(userID)) &&  userID !== nil) do
+      if(is_bitstring(userID)) do
+        userID = String.to_integer(userID)
+        # conn |> render(ApiWeb.WorkingTimesView, "get_working_time.json", %{status: 0, success: 0, message: "Logger: ", content: is_integer(userID)})
+      end
       user = Repo.one(from u in User, where: u.id == ^userID)
       if(user !== nil) do
         workingtime = Repo.all(from w in WorkingTimes, where: w.user == ^userID)
