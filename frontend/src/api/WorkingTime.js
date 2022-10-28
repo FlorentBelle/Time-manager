@@ -2,17 +2,6 @@ import Api from "./Api";
 
 export default {
  
-    // getAllWorkingTimesUser: async function(userId) {
-    //     const response = await fetch(`${Api}/users/${userId}/working_times`, {
-    //     mode: 'cors',
-    //     headers: {
-    //         "Content-type": "application/json; charset=UTF-8"
-    //     }
-    //     });
-    //     return response.json()
-    // },
-
-
     getAllWorkingTimesUser: async function(userId, start, end) {
         
         if (start && end) {
