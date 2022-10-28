@@ -71,7 +71,7 @@ You need to have install Docker Desktop and had link your Linux subsystem to doc
 
 ### 1. First we need to build our Docker image:
 ```bash
-$ docker-compose build
+$ docker-compose up --build
 ```
 ### 2. Go to config/dev.ex and change the content for your database by this:
 ```bash
@@ -95,7 +95,7 @@ config :time_manager, TimeManagerWeb.Endpoint,
 $ docker-compose run api mix ecto.create
 ```
 
-### 5. Lunch docker !
+### 5. Launch docker !
 ```bash
 $ docker-compose up
 ```
