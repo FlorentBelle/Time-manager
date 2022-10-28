@@ -1,0 +1,19 @@
+
+<template>
+    <h1>Dashboard</h1>
+</template>
+
+<script>
+
+export default {
+  data: function() {
+       return {
+        }
+    },
+    mounted () {
+    }
+}
+</script>
+
+<style scoped>
+</style>
