@@ -8,8 +8,9 @@ defmodule ApiWeb.UserController do
 
   def create(conn, %{ "email" => email, "username" => username } = params) do
     case params |> User.create_user() do
-      {:ok, %User{} = _user} ->
-        conn |> render(ApiWeb.UserView, "post_user.json", %{status: 201, success: true, message: "User created"})
+      {:ok, %User{} = user} ->
+        newUser = %{ id: user.id, username: user.username, email: user.email}
+        conn |> render(ApiWeb.UserView, "user_view.json", %{status: 201, success: true, message: "User created", content: newUser})
       _ ->
         if(Repo.exists?(from u in User, where: u.email == ^email)) do
           conn |> render(ApiWeb.ErrorView, "error.json", %{status: 409, error: "User already exists"})
@@ -27,7 +28,7 @@ defmodule ApiWeb.UserController do
       if (username !== nil && email === nil) do
         retrieved = Repo.all(from u in User, where: u.username == ^username)
         if (retrieved !== nil && Enum.count(retrieved) !== 0) do
-          conn |> render(ApiWeb.UserView, "get_users.json", %{status: 200, success: true, message: "User matching the given username query retrieved", content: retrieved})
+          conn |> render(ApiWeb.UserView, "user_view.json", %{status: 200, success: true, message: "User matching the given username query retrieved", content: retrieved})
         else
           conn |> render(ApiWeb.ErrorView, "error.json", %{status: 403, error: "No user matching the given username query"})
         end
@@ -35,14 +36,14 @@ defmodule ApiWeb.UserController do
         if (email !== nil && username === nil) do
           retrieved = Repo.all(from u in User, where: u.email == ^email)
           if (retrieved !== nil && Enum.count(retrieved) !== 0) do
-            conn |> render(ApiWeb.UserView, "get_users.json", %{status: 200, success: true, message: "Users matching the given email query retrieved", content: retrieved})
+            conn |> render(ApiWeb.UserView, "user_view.json", %{status: 200, success: true, message: "Users matching the given email query retrieved", content: retrieved})
           else
             conn |> render(ApiWeb.ErrorView, "error.json", %{status: 403, error: "No user matching the given email query"})
           end
         else
           retrieved = Repo.all(User)
           if(retrieved !== nil && Enum.count(retrieved) !== 0) do
-            conn |> render(ApiWeb.UserView, "get_users.json", %{status: 200, success: true, message: "All users retrieved", content: retrieved})
+            conn |> render(ApiWeb.UserView, "user_view.json", %{status: 200, success: true, message: "All users retrieved", content: retrieved})
           else
             conn |> render(ApiWeb.ErrorView, "error.json", %{status: 403, error: "No user found"})
           end
@@ -51,7 +52,7 @@ defmodule ApiWeb.UserController do
     else
       retrieved = Repo.all(from u in User, where: u.username >= ^username, where: u.email <= ^email)
       if(retrieved !== nil && Enum.count(retrieved) !== 0) do
-        conn |> render(ApiWeb.UserView, "get_users.json", %{status: 200, success: true, message: "Users matching the given queries email and username retrieved", content: retrieved})
+        conn |> render(ApiWeb.UserView, "user_view.json", %{status: 200, success: true, message: "Users matching the given queries email and username retrieved", content: retrieved})
       else
         conn |> render(ApiWeb.ErrorView, "error.json", %{status: 403, error: "No user the given queries email and username"})
       end
@@ -88,8 +89,9 @@ defmodule ApiWeb.UserController do
       id = String.to_integer(params["userID"])
       user = Repo.one(from u in User, where: u.id == ^id)
       if(user !== nil) do
+        newUser = %{ id: user.id, username: user.username, email: user.email}
         Repo.delete(user)
-        conn |> render(ApiWeb.WorkingTimesView, "post_working_time.json", %{status: 204, success: true, message: "User deleted"})
+        conn |> render(ApiWeb.WorkingTimesView, "post_working_time.json", %{status: 204, success: true, message: "User deleted", content: newUser})
       else
         conn |> render(ApiWeb.ErrorView, "error.json", status: 403, error: "No user found")
       end

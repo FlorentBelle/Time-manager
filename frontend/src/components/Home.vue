@@ -1,24 +1,16 @@
 
 <template >
     <div>
-        <h1>Home menu</h1>
+        <h1 class="no-margin">Home menu</h1>
     </div>
 </template>
   
-  <script>
-    export default {
-        data() {
-        },
+<script>
+</script>
 
-        mounted () {
-
-        },
-        methods: {
-
-        }
-    }
-  </script>
-  
-  <style scoped>
-  </style>
+<style scoped lang="scss">
+  .no-margin {
+    margin: 0;
+  }
+</style>
   
