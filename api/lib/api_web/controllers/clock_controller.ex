@@ -6,7 +6,7 @@ defmodule ApiWeb.ClocksController do
   alias Api.Clocks
   alias Api.Repo
 
-  def create(conn, %{"status" => status, "time" => time, "userId" => userId}) do
+  def create(conn, %{"status" => status, "time" => time, "user" => userId}) do
     {:ok, dt_struct, utc_offset} = DateTime.from_iso8601(time)
     time_ = DateTime.truncate(dt_struct, :second)
     if (userId !== nil) do
