@@ -110,14 +110,14 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 15%;
+    height: 30%;
     .login-logo {
       width: 200px;
     }
   }
   .login-form-container {
     width: 100%;
-    height: 70%;
+    height: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
