@@ -4,41 +4,11 @@
 
 <template >
   <div class="menu-title-container">
-    <h1 class="menu-title">Welcome !</h1>
+    <div class="greeting-card">
+      <h1 class="menu-title">Welcome {{this.$store.state.userConnected.username}} !</h1>
+    </div>
   </div>
   <div class="card-menu-container">
-
-    <!-- <div class="card-menu">
-      <h2 class="card-menu-title">Clock</h2>
-      <p class="card-menu-description">Set a clock to register your working times</p>
-      <div class="card-menu-icon">
-        <svg viewBox="0 0 477.849 477.849" >
-          <g>
-            <g>
-              <path d="M374.099,385.518c71.737-74.859,69.207-193.698-5.652-265.435s-193.698-69.206-265.435,5.652
-                c-69.586,72.615-69.586,187.168,0,259.783l-48.777,65.024c-5.655,7.541-4.127,18.238,3.413,23.893s18.238,4.127,23.893-3.413
-                l47.275-63.044c65.4,47.651,154.078,47.651,219.477,0l47.275,63.044c5.655,7.541,16.353,9.069,23.893,3.413
-                c7.541-5.655,9.069-16.353,3.413-23.893L374.099,385.518z M255.623,255.982c0,3.693-1.198,7.286-3.413,10.24l-51.2,68.267
-                c-5.655,7.541-16.353,9.069-23.893,3.413s-9.069-16.353-3.413-23.893l47.787-63.71v-96.717c0-9.426,7.641-17.067,17.067-17.067
-                s17.067,7.641,17.067,17.067V255.982z"/>
-            </g>
-          </g>
-          <g>
-            <g>
-              <path d="M145.286,24.984C111.544-7.918,57.519-7.237,24.616,26.505c-32.314,33.139-32.318,85.997-0.008,119.141
-                c6.665,6.663,17.468,6.663,24.132,0l96.546-96.529C151.949,42.452,151.949,31.649,145.286,24.984z"/>
-            </g>
-          </g>
-          <g>
-            <g>
-              <path d="M452.486,24.984c-33.323-33.313-87.339-33.313-120.661,0c-6.663,6.665-6.663,17.468,0,24.132l96.529,96.529
-                c6.665,6.663,17.468,6.663,24.132,0C485.799,112.323,485.799,58.307,452.486,24.984z"/>
-            </g>
-          </g>
-        </svg>
-      </div>
-    </div> -->
-
     <div class="card-menu">
       <h2 class="card-menu-title">Working times</h2>
       <p class="card-menu-description">View and manage your working times</p>
@@ -100,9 +70,20 @@
     align-items: center;
     width: 100%;
     height: 20%;
-    margin-bottom: 5%;
-    .menu-title {
-      margin: 0;
+    margin-bottom: 2.5%;
+    .greeting-card {
+      width: 25%;
+      display: flex;
+      justify-content: center;
+      background: rgb(170,111,207);
+      background: linear-gradient(90deg, rgba(170,111,207,1) 0%, rgba(28,28,32,0.2861519607843137) 50%);
+      padding: 15px;
+      border-radius: 15px;
+      .menu-title {
+        color: var(--color-2);
+        margin: 0;
+        font-size: 24px;
+      }
     }
   }
   .card-menu-container {
@@ -112,48 +93,53 @@
     justify-content: space-evenly;
     align-items: flex-start;
     .card-menu {
-      width: 300px;
-      height: 300px;
+      width: 220px;
+      height: 270px;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      background-color: #000000;
+      background-color: var(--bg-4);
       box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
       text-align: center;
-      border-radius: 5px;
+      border-radius: 15px;
       .card-menu-title {
-        font-size: 22px;
-        font-weight: 500;
-        margin-bottom: 20px;
-        color: #ffffff;
+        font-size: 18px;
+        font-weight: 400;
+        margin-top: 0px;
+        margin-bottom: 15px;
+        color: var(--color-2);
       }
       .card-menu-description {
-        margin-bottom: 20px;
-        color: #ffffff;
+        margin-bottom: 12px;
+        color: var(--color-2);
+        padding: 5px;
+        font-size: 12px;
       }
       .card-menu-icon {
+        margin-top: 5px;
         margin-bottom: 20px;
         svg {
-          width: 75px;
-          fill: #ffffff;
+          width: 36px;
+          fill: var(--color-2);
         }
       }
       .card-menu-button {
         border: none;
-        padding: 10px;
-        background-color: #ffffff;
-        border-radius: 5px;
-        color: #000000;
-        margin-bottom: 20px;
-        width: 100px;
-        height: 50px;
-        font-size: 16px;
-        font-weight: 400;
-        &:hover {
-          filter: brightness(1.25);
-          cursor: pointer;
-        }
+          border-radius: 10px;
+          padding: 5px;
+          background-color: var(--color-1);
+          color: var(--color-2);
+          margin-top: 10px;
+          width: 80px;
+          height: 25px;
+          font-size: 12px;
+          font-weight: 400;
+          text-align: center;
+          &:hover {
+            filter: brightness(1.25);
+            cursor: pointer;
+          }
       }
     }
   }

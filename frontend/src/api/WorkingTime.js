@@ -1,11 +1,9 @@
-import Api from "./Api";
-
 export default {
  
     getAllWorkingTimesUser: async function(userId, start, end) {
         
         if (start && end) {
-            const response = await fetch(`${Api}/users/${userId}/working_times?start=${start}&end=${end}`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/users/${userId}/working_times?start=${start}&end=${end}`, {
                 mode: 'cors',
                 headers: {
                     "Content-type": "application/json; charset=UTF-8"
@@ -13,7 +11,7 @@ export default {
             });
             return response.json()
         } else if (start && !end) {
-            const response = await fetch(`${Api}/users/${userId}/working_times?start=${start}`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/users/${userId}/working_times?start=${start}`, {
                 mode: 'cors',
                 headers: {
                     "Content-type": "application/json; charset=UTF-8"
@@ -21,7 +19,7 @@ export default {
             });
             return response.json()
         } else if (end && !start) {
-            const response = await fetch(`${Api}/users/${userId}/working_times?end=${end}`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/users/${userId}/working_times?end=${end}`, {
                 mode: 'cors',
                 headers: {
                     "Content-type": "application/json; charset=UTF-8"
@@ -29,7 +27,7 @@ export default {
             });
             return response.json()
         } else {
-            const response = await fetch(`${Api}/users/${userId}/working_times`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/users/${userId}/working_times`, {
                 mode: 'cors',
                 headers: {
                     "Content-type": "application/json; charset=UTF-8"
@@ -39,7 +37,7 @@ export default {
         }
     },
     getOneWorkingTimesUser: async function(userId,workingTimeId) {
-        const response = await fetch(`${Api}/users/${userId}/workingtimes/${workingTimeId}`, {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/users/${userId}/workingtimes/${workingTimeId}`, {
         mode: 'cors',
         headers: {
             "Content-type": "application/json; charset=UTF-8"
@@ -48,7 +46,7 @@ export default {
         return response.json()
     },
     createWorkingTimesUser: async function(userId, workingTime) {
-        const response = await fetch(`${Api}/workingtimes/${userId}`, {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/workingtimes/${userId}`, {
         method: 'POST',
         mode: 'cors',
         headers: {
@@ -59,7 +57,7 @@ export default {
         return response.json()
     },
     updateWorkingTimesUser: async function(workingTimeId, workingTime) {
-        const response = await fetch(`${Api}/workingtimes/${workingTimeId}`, {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/workingtimes/${workingTimeId}`, {
         method: 'PUT',
         mode: 'cors',
         headers: {
@@ -70,7 +68,7 @@ export default {
         return response.json()
     },
     deleteWorkingTimesUser: async function(workingTimeId) {
-        const response = await fetch(`${Api}/workingtimes/${workingTimeId}`, {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/workingtimes/${workingTimeId}`, {
         method: 'DELETE',
         mode: 'cors',
         headers: {
@@ -87,7 +85,7 @@ export default {
  // getAllWorkingTimesUser: async function(userId, start, end) {
         
     //     if (start && end) {
-    //         const response = await fetch(`${Api}/working_times/${userId}?start=${start}&end=${end}`, {
+    //         const response = await fetch(`${import.meta.env.VITE_API_URL}/working_times/${userId}?start=${start}&end=${end}`, {
     //             mode: 'cors',
     //             headers: {
     //                 "Content-type": "application/json; charset=UTF-8"
@@ -95,7 +93,7 @@ export default {
     //         });
     //         return response.json()
     //     } else if (start && !end) {
-    //         const response = await fetch(`${Api}/working_times/${userId}?start=${start}`, {
+    //         const response = await fetch(`${import.meta.env.VITE_API_URL}/working_times/${userId}?start=${start}`, {
     //             mode: 'cors',
     //             headers: {
     //                 "Content-type": "application/json; charset=UTF-8"
@@ -103,7 +101,7 @@ export default {
     //         });
     //         return response.json()
     //     } else if (end && !start) {
-    //         const response = await fetch(`${Api}/working_times/${userId}?end=${end}`, {
+    //         const response = await fetch(`${import.meta.env.VITE_API_URL}/working_times/${userId}?end=${end}`, {
     //             mode: 'cors',
     //             headers: {
     //                 "Content-type": "application/json; charset=UTF-8"
@@ -111,7 +109,7 @@ export default {
     //         });
     //         return response.json()
     //     } else {
-    //         const response = await fetch(`${Api}/working_times/${userId}`, {
+    //         const response = await fetch(`${import.meta.env.VITE_API_URL}/working_times/${userId}`, {
     //             mode: 'cors',
     //             headers: {
     //                 "Content-type": "application/json; charset=UTF-8"

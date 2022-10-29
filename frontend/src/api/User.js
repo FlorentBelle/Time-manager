@@ -1,9 +1,7 @@
-import Api from "./Api";
-
 export default {
 
     getAllUsers: async function() {
-        const response = await fetch(`${Api}/users`, {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/users`, {
         mode: 'cors',
         headers: {
             "Content-type": "application/json; charset=UTF-8"
@@ -11,8 +9,9 @@ export default {
         });
         return response.json()
     },
+
     getOneUser: async function(userId) {
-        const response = await fetch(`${Api}/users/${userId}`, {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/users/${userId}`, {
         mode: 'cors',
         headers: {
             "Content-type": "application/json; charset=UTF-8"
@@ -20,8 +19,9 @@ export default {
         });
         return response.json()
     },
+
     createUser: async function(user) {
-        const response = await fetch(`${Api}/users`, {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/users`, {
         method: 'POST',
         mode: 'cors',
         headers: {
@@ -31,8 +31,9 @@ export default {
         });
         return response.json()
     }, 
+
     updateUser: async function(userId, user) {
-        const response = await fetch(`${Api}/users/${userId}`, {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/users/${userId}`, {
         method: 'PUT',
         mode: 'cors',
         headers: {
@@ -42,8 +43,9 @@ export default {
         });
         return response.json()
     },
+
     deleteUser: async function(userId) {
-        const response = await fetch(`${Api}/users/${userId}`, {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/users/${userId}`, {
         method: 'DELETE',
         mode: 'cors',
         headers: {
@@ -52,8 +54,9 @@ export default {
         });
         return response.json()
     },
+    
     getUserByEmailAndUsername: async function(email, username) {
-        const response = await fetch(`${Api}/users?email=${email}&username=${username}`, {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/users?email=${email}&username=${username}`, {
         mode: 'cors',
         headers: {
             "Content-type": "application/json; charset=UTF-8"

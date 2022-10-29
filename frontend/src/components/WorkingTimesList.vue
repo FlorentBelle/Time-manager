@@ -25,7 +25,7 @@ export default {
       getWorkingTimesUser: function() {
         if (this.$store.state.userConnected.isConnected === true) {
           id = this.$store.state.userConnected.id
-          fetch("http://localhost:4000/api/workingtimes" + id, {
+          fetch(import.meta.env.VITE_API_URL + "/workingtimes" + id, {
             mode: 'cors',
             headers: {
               "Content-type": "application/json; charset=UTF-8"
