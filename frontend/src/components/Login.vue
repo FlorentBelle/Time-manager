@@ -110,7 +110,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 20%;
+    height: 15%;
     .login-logo {
       width: 200px;
     }

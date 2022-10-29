@@ -88,10 +88,10 @@
   }
   .card-menu-container {
     width: 100%;
-    height: 80%;
+    height: 45%;
     display: flex;
     justify-content: space-evenly;
-    align-items: flex-start;
+    align-items: center;
     .card-menu {
       width: 220px;
       height: 270px;
