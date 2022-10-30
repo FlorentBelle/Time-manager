@@ -27,6 +27,7 @@ export default {
     getWeekWorkTime: function (list) {
         const weekList= this.getWeekList(list)
         let weekWorkTimeByDay = [];
+        let totalWeekWorkTime = 0;
         for (let i = 0; i < weekList.length; i++) {
             weekWorkTimeByDay[i] = 0;
             for (const element of weekList[i]) {
@@ -42,9 +43,12 @@ export default {
         const safe = weekWorkTimeByDay[0]
         for (let i = 1; i < weekWorkTimeByDay.length; i++) {
             weekWorkTimeByDay[i-1] = weekWorkTimeByDay[i]
+            totalWeekWorkTime = totalWeekWorkTime + weekWorkTimeByDay[i]
         }
         weekWorkTimeByDay[6] = safe
-        return weekWorkTimeByDay
+        totalWeekWorkTime = Math.round((totalWeekWorkTime + safe)*100)/100
+
+        return {weekWorkTimeByDay: weekWorkTimeByDay, totalWeekWorkTime:totalWeekWorkTime}
     },
     getThisWeekLimits: function() {
         let today = new Date()
