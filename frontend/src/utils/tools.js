@@ -1,8 +1,10 @@
+import moment from "moment-timezone";
+
+const timezone = 'Europe/Amsterdam'
+
 export default {
     getWeekList: function (list) {
-
         let weekList = [[],[],[],[],[],[],[]];
-
         for (const element of list) {
             let day = new Date(element.start)
             day = day.getDay()
@@ -10,12 +12,24 @@ export default {
         }
         return weekList
     },
+    getDaysList: function (start) {
+        let daysList = []
+        const week = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+        
+        for (let i = 0; i < 7; i++) {
+            let day = new Date(start)
+            day.setDate(day.getDate() + i)
+            day = moment(day).tz(timezone).format()
+            daysList.push(week[i] + ', ' + day.split('T')[0])
+        }
+        return daysList
+    },
     getWeekWorkTime: function (list) {
-
+        const weekList= this.getWeekList(list)
         let weekWorkTimeByDay = [];
-        for (let i = 0; i < list.length; i++) {
+        for (let i = 0; i < weekList.length; i++) {
             weekWorkTimeByDay[i] = 0;
-            for (const element of list[i]) {
+            for (const element of weekList[i]) {
                 let start = new Date(element.start)
                 let end = new Date(element.end)
                 let time = end - start
@@ -31,9 +45,64 @@ export default {
         }
         weekWorkTimeByDay[6] = safe
         return weekWorkTimeByDay
+    },
+    getThisWeekLimits: function() {
+        let today = new Date()
+        console.log("today", today)
+
+        let day = today.getDay()
+        console.log("getday", day)
+
+        let start = new Date()
+        let end = new Date()
+        if (day ==0) {
+            start.setDate(start.getDate() -6)
+        } else {
+            start.setDate(start.getDate() - day + 1)
+            end.setDate(today.getDate() + 6 - day + 1)
+        }
+
+        start.setHours(0,0,0,0)
+        end.setHours(23,59,59,0)
+        
+        start= moment(start).tz(timezone).format()
+        end= moment(end).tz(timezone).format()
+        console.log("getThisWeekLimits", start, end)
+
+        start = start.split('T')[0] + " " + start.split('T')[1].slice(0,8)
+        end = end.split('T')[0] + " " + end.split('T')[1].slice(0,8)
+        console.log("getThisWeekLimits", start, end)
+
+        return {start: start, end: end}
+    },
+    addDays: function (date, days) {
+        let result = new Date(date);
+        console.log("date addays init", result)
+        result.setDate(result.getDate() + days);
+        console.log("date days added", result)
+        result = moment(result).tz(timezone).format()
+        result = result.split('T')[0] + " " + result.split('T')[1].slice(0,8)
+        return result;
     }
 }
 
+
+
+// console.log(getDaysList("2022-10-24 00:00:00", "2022-10-31 01:00:00"))
+// function getThisWeekLimits() {
+//     let today = new Date()
+//     console.log("today", today)
+//     let day = today.getDay()
+//     let start = new Date()
+//     let end = new Date()
+//     start.setDate(today.getDate() - day +1)
+//     end.setDate(today.getDate() + 6 - day+1)
+//     start.setHours(0,0,0,0)
+//     end.setHours(0,0,0,0)
+//     return [start, end]
+// }
+
+// console.log(getThisWeekDates())
 // const test = [
 //     {
 //         end: "2022-10-24T12:05:23",
