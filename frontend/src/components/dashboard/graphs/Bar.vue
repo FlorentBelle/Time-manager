@@ -1,118 +1,173 @@
 <template>
-    <Bar v-if="loaded"
-      :chart-options="chartOptions"
-      :chart-data="chartData"
-      :chart-id="chartId"
-      :dataset-id-key="datasetIdKey"
-      :plugins="plugins"
-      :css-classes="cssClasses"
-      :styles="styles"
-      :width="width"
-      :height="height"
-    />
+      <div class="row">
+        <div class="col s12">
+          <div class="card">
+            <div class="card-content">
+              <div class="row">
+                <div class="col s12">
+                      <span class="card-title">{{`Week working time`}}</span>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col s1">
+                      <button class="btn waves-effect waves-light" v-on:click="getPreviousWeek"><i class="material-icons">chevron_left</i></button>
+                </div>
+                <div class="col s4 offset-s1">
+                      <span class="card-title">{{`from ${startShow} to ${endShow} in hours`}}</span>
+                </div>
+                <div class="col s4">
+                      <button class="btn waves-effect waves-light" v-on:click="getNextWeek"><i class="material-icons">chevron_right</i></button>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col s12">
+                  <Bar v-if="loaded"
+                    :chart-options="chartOptions"
+                    :chart-data="chartData"
+                    :chart-id="chartId"
+                    :dataset-id-key="datasetIdKey"
+                    :plugins="plugins"
+                    :css-classes="cssClasses"
+                    :styles="styles"
+                    :width="width"
+                    :height="height" 
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
   </template>
+    
+    <script>
+    import { Bar } from 'vue-chartjs'
+    import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js'
   
-  <script>
-  import { Bar } from 'vue-chartjs'
-  import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js'
-
-  import WorkingTime from '../../../api/WorkingTime'
-  import tools from '../../../utils/tools'
-
-  ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
+    import WorkingTime from '../../../api/WorkingTime'
+    import tools from '../../../utils/tools'
   
-  export default {
-    name: 'BarChart',
-    components: { Bar },
-    props: {
-      chartId: {
-        type: String,
-        default: 'bar-chart'
-      },
-      datasetIdKey: {
-        type: String,
-        default: 'label'
-      },
-      width: {
-        type: Number,
-        default: 400
-      },
-      height: {
-        type: Number,
-        default: 400
-      },
-      cssClasses: {
-        default: '',
-        type: String
-      },
-      styles: {
-        type: Object,
-        default: () => {}
-      },
-      plugins: {
-        type: Object,
-        default: () => {}
-      }
-    },
-    data: () => ({
-      loaded: false,
-      chartData: null,
-
-    }),
-    async mounted () {
-      this.loaded = false
-
-      try {
-        const userID=1
-        let start='2022-10-24 00:00:00'
-        let end='2022-10-30 23:59:59'
-        const res = await WorkingTime.getAllWorkingTimesUser(userID, start, end)
-        const weekList = tools.getWeekList(res.data)
-        const weekWorkingTime = tools.getWeekWorkTime(weekList)
-        start = start.slice(0, 10)
-        end = end.slice(0, 10)
-   
-        console.log(weekWorkingTime)
-
-        this.chartData = {
-          labels: [ 'Monday', 'Tuesday', 'Wednesday', "Thursday", "Friday", "Saturday", "Sunday" ],
-          datasets: [ { 
-            label: `Working Time (hours) from ${start} to ${end}`,
-            data: weekWorkingTime,
-            backgroundColor:[
-            'rgba(255, 99, 132, 0.2)',
-            'rgba(255, 159, 64, 0.2)',
-            'rgba(255, 205, 86, 0.2)',
-            'rgba(75, 192, 192, 0.2)',
-            'rgba(54, 162, 235, 0.2)',
-            'rgba(153, 102, 255, 0.2)',
-            'rgba(20, 222, 207, 0.2)'
-            ],
-            borderColor: [
-            'rgb(255, 99, 132)',
-            'rgb(255, 159, 64)',
-            'rgb(255, 205, 86)',
-            'rgb(75, 192, 192)',
-            'rgb(54, 162, 235)',
-            'rgb(153, 102, 255)',
-            'rgb(201, 203, 207)'
-            ],
-            borderWidth: 1
-          }]
+    ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
+    
+    export default {
+      name: 'BarChart',
+      components: { Bar },
+      props: {
+        chartId: {
+          type: String,
+          default: 'bar-chart'
+        },
+        datasetIdKey: {
+          type: String,
+          default: 'label'
+        },
+        width: {
+          type: Number,
+          default: 400
+        },
+        height: {
+          type: Number,
+          default: 400
+        },
+        cssClasses: {
+          default: '',
+          type: String
+        },
+        styles: {
+          type: Object,
+          default: () => {}
+        },
+        plugins: {
+          type: Object,
+          default: () => {}
+        },
+        options: {        
+          legend: {
+            display: false
+          }
         }
-        this.chartOptions = {
-          responsive: true,
-          maintainAspectRatio: false
+      },
+      data: () => ({
+        loaded: false,
+        chartData: null,
+        startShow: null,
+        endShow: null,
+        weekWorkingTime: null,
+        labelsDates: null,
+        startV: null,
+        endV: null,
+      }),
+      methods: {
+        async getPreviousWeek() {
+          this.startV = tools.addDays(this.startV, -7)
+          this.endV = tools.addDays(this.endV, -7)
+          await this.show(this.startV, this.endV)
+          console.log("this", this.startV, this.endV)
+        },
+        async getNextWeek() {
+          this.startV = tools.addDays(this.startV, 7)
+          this.endV = tools.addDays(this.endV, 7)
+          await this.show(this.startV, this.endV)
+          console.log("this", this.startV, this.endV)
+        },
+        async show(start, end) {
+          const userID=this.$route.params.userID
+          const res = await WorkingTime.getAllWorkingTimesUser(userID, start, end)
+          this.weekWorkingTime = tools.getWeekWorkTime(res.data)
+          this.startShow = start.slice(0, 10)
+          this.endShow = end.slice(0, 10)
+          this.labelsDates = tools.getDaysList(start)
+          this.chartData = {
+            labels: this.labelsDates,
+            datasets: [ { 
+              data: this.weekWorkingTime,
+              backgroundColor:[
+              'rgba(255, 99, 132, 0.2)',
+              'rgba(255, 159, 64, 0.2)',
+              'rgba(255, 205, 86, 0.2)',
+              'rgba(75, 192, 192, 0.2)',
+              'rgba(54, 162, 235, 0.2)',
+              'rgba(153, 102, 255, 0.2)',
+              'rgba(20, 222, 207, 0.2)'
+              ],
+              borderColor: [
+              'rgb(255, 99, 132)',
+              'rgb(255, 159, 64)',
+              'rgb(255, 205, 86)',
+              'rgb(75, 192, 192)',
+              'rgb(54, 162, 235)',
+              'rgb(153, 102, 255)',
+              'rgb(201, 203, 207)'
+              ],
+              borderWidth: 1,
+            }]
+          }
+          this.chartOptions = {
+            responsive: true,
+            maintainAspectRatio: false,       
+            plugins: {
+              legend: {
+                  display: false,
+              }
+            }
+          }
+        },
+      },
+      async mounted () {
+        this.loaded = false
+  
+        try {
+          const thisWeekStart = tools.getThisWeekLimits()
+          this.startV=thisWeekStart.start
+          this.endV=thisWeekStart.end
+
+          await this.show(this.startV, this.endV)
+
+          this.loaded = true
+        } catch (e) {
+          console.error(e)
         }
-        this.loaded = true
-        this.datasets= [{
-          label: 'My First Dataset',
-          
-          }]
-      } catch (e) {
-        console.error(e)
       }
     }
-  }
-  </script>
-  
+    </script>
+    
