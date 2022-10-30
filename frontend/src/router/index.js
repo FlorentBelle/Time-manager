@@ -37,23 +37,24 @@ const router = createRouter({
     },
     {
       // path: '/chart_manager/:userID',
-      path: '/',
+      path: '/:userID',
+      
       component: Dashboard,
       children: [
         {
-          path: '', 
+          path: '/:userID', 
           component: All
         },
         {
-          path: 'bar', 
+          path: '/:userID/bar', 
           component: Bar
         },
         {
-          path: 'line', 
+          path: '/:userID/line', 
           component: Line
         },
         {
-          path: 'another', 
+          path: '/:userID/another', 
           component: Another
         },
       ]
