@@ -162,11 +162,16 @@
           this.endV=thisWeekStart.end
 
           await this.show(this.startV, this.endV)
-
+          this.timer = setInterval(() => {
+            this.show(this.startV, this.endV)
+          }, 60000)
           this.loaded = true
         } catch (e) {
           console.error(e)
         }
+      },
+      beforeDestroy() {
+        clearInterval(this.timer)
       }
     }
     </script>
