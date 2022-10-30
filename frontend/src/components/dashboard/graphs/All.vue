@@ -1,14 +1,13 @@
 <template>
-  <h1>All</h1>
 	<div class="row">
 		<div class="col s4">
-		<Bar/>
+			<Bar/>
 		</div>
 		<div class="col s4">
-		<Line/>
+			<Line/>
 		</div>
 		<div class="col s4">
-		<Line/>
+			<Another/>
 		</div>
 	</div>
 </template>
@@ -17,11 +16,13 @@
 
 import Bar from './Bar.vue'
 import Line from './Line.vue'
+import Another from './Another.vue'
 
 export default {
   components: {
 		Bar,
-		Line
+		Line,
+		Another
 	},
 	data: function() {
 		return {

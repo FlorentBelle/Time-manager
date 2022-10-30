@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
     <Bar v-if="loaded"
       :chart-options="chartOptions"
       :chart-data="chartData"
@@ -115,4 +115,4 @@
     }
   }
   </script>
-  
+   -->
