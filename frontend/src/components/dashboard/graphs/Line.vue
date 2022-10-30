@@ -5,24 +5,13 @@
         <div class="card-content">
           <div class="row">
             <div class="col s12">
-                  <span class="card-title"><strong>Working time during years</strong></span>
-                  <span class="card-title"><strong>total:  {{totalWeekWorkTime}} hours </strong></span>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col s2">
-                  <button class="btn waves-effect waves-light left " v-on:click="getPreviousWeek"><i class="material-icons">chevron_left</i></button>
-            </div>
-            <div class="col s8 center">
-                  <span class="card-title">from <strong>{{startShow}}</strong> to <strong>{{endShow}}</strong></span>
-            </div>
-            <div class="col s2">
-                  <button class="btn waves-effect waves-light right" v-on:click="getNextWeek"><i class="material-icons">chevron_right</i></button>
+                <span class="card-title"><strong>Year Working time</strong></span>
+                <span class="card-title"><strong>total: {{totalYearWorkTime}} days (7h) </strong></span>
             </div>
           </div>
           <div class="row">
             <div class="col s12">
-              <Line
+              <Line v-if="loaded"
                 :chart-options="chartOptions"
                 :chart-data="chartData"
                 :chartId = "chartId"
@@ -31,7 +20,7 @@
                 :cssClasses = "cssClasses"
                 :styles = "styles"
                 :plugins = "plugins"
-            />
+              />
             </div>
           </div>
         </div>
@@ -45,17 +34,17 @@
   import { Line } from 'vue-chartjs'
 
   import WorkingTime from '../../../api/WorkingTime'
-    import tools from '../../../utils/tools'
+  import tools from '../../../utils/tools'
 
   import {
   Chart as ChartJS,
-  Title,
-  Tooltip,
-  Legend,
-  LineElement,
-  LinearScale,
-  PointElement,
-  CategoryScale,
+    Title,
+    Tooltip,
+    Legend,
+    LineElement,
+    LinearScale,
+    PointElement,
+    CategoryScale,
   } from 'chart.js'
 
   ChartJS.register(
@@ -70,9 +59,7 @@
   
   export default {
     name: 'LineChart',
-    components: {
-        Line
-    },
+    components: { Line },
     props: {
       chartId: {
       type: String,
@@ -80,11 +67,11 @@
       },
       width: {
       type: Number,
-      default: 400
+      default: 470
       },
       height: {
       type: Number,
-      default: 400
+      default: 470
       },
       cssClasses: {
       default: '',
@@ -95,47 +82,77 @@
         default: () => {}
       },
       plugins: {
-        type: Object,
+        type: Array,
         default: () => {}
       }
     },
-    data() {
-      return {
-        chartData: {
-          labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-          datasets: [
-              {
-              label: 'Data One',
-              backgroundColor: '#f87979',
-              data: [40, 39, 10, 40, 39, 80, 40]
-              }
-          ]
-        },
-        chartOptions: {
-          responsive: true,
-          maintainAspectRatio: false
-        }
+    data: () => ({
+      loaded: false,
+      chartData: null,
+      startShow: null,
+      endShow: null,
+      // weekWorkingTime: null,
+      totalYearWorkTime: null,
+      labelsDates: null,
+      startV: null,
+      endV: null,
+      // colorWeek: "blue",
+      // contract: 35
+    }),
+    methods: {
+      async showYear(start, end) {
+        const userID=this.$route.params.userID
+        const res = await WorkingTime.getAllWorkingTimesUser(userID, start, end)
+        const getWorkingTimeByMonth = tools.getWorkingTimeByMonth(res.data)
+        this.graphData = getWorkingTimeByMonth.weekWorkTimeByMonth
+        this.totalYearWorkTime = getWorkingTimeByMonth.totalYearTime
+        this.year = new Date(start).getFullYear()
+        this.labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July', "August", "September", "October", "November", "December"]
+      },
+      async showMonth(month) {
+
       }
     },
-    // async mounted () {
-    //   this.loaded = false
+    async mounted () {
+      this.loaded = false
 
-    //   try {
-    //     const thisWeekStart = tools.getThisWeekLimits()
-    //     this.startV=thisWeekStart.start
-    //     this.endV=thisWeekStart.end
+      try {
+        const thisYearLimits =  tools.getThisYearLimits()
+        this.startV=thisYearLimits.start
+        this.endV=thisYearLimits.end
 
-    //     await this.show(this.startV, this.endV)
-    //     this.timer = setInterval(() => {
-    //       this.show(this.startV, this.endV)
-    //     }, 60000)
-    //     this.loaded = true
-    //   } catch (e) {
-    //     console.error(e)
-    //   }
-    // },
-    // beforeDestroy() {
-    //   clearInterval(this.timer)
-    // }
+        await this.showYear(this.startV, this.endV)
+
+        this.chartData = {
+          labels: this.labels,
+          datasets: [
+              {
+                label: 'Data One',
+                backgroundColor: '#f87979',
+                data: this.graphData
+              }
+          ]
+        }
+        this.chartOptions={
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+              legend: {
+                  display: false,
+              }
+          }
+        }
+        // await this.show(this.startV, this.endV)
+        // this.timer = setInterval(() => {
+        //   this.show(this.startV, this.endV)
+        // }, 60000)
+        this.loaded = true
+      } catch (e) {
+        console.error(e)
+      }
+    },
+    beforeDestroy() {
+      clearInterval(this.timer)
+    }
   }
 </script>

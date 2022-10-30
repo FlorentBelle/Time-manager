@@ -12,6 +12,16 @@ export default {
         }
         return weekList
     },
+    getMonthList: function (list) {
+        let monthList = [[],[],[],[],[],[],[],[],[],[],[],[]];
+        for (const element of list) {
+            let day = new Date(element.start)
+            day = day.getMonth()
+            console.log(day)
+            monthList[day].push(element)
+        }
+        return monthList
+    },
     getDaysList: function (start) {
         let daysList = []
         const week = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
@@ -52,10 +62,7 @@ export default {
     },
     getThisWeekLimits: function() {
         let today = new Date()
-        console.log("today", today)
-
         let day = today.getDay()
-        console.log("getday", day)
 
         let start = new Date()
         let end = new Date()
@@ -79,6 +86,24 @@ export default {
 
         return {start: start, end: end}
     },
+    getThisYearLimits: function() {
+        let today = new Date()
+        let thisYear = today.getFullYear()
+        let startThisYear = new Date(thisYear, 0, 1)
+        let endThisYear = new Date(thisYear, 11, 31)
+        endThisYear.setHours(23, 59, 59, 0)
+        console.log("getthisyearlimit", startThisYear, endThisYear)
+      
+        startThisYear = moment(startThisYear).tz(timezone).format()
+        endThisYear = moment(endThisYear).tz(timezone).format()
+        console.log("getthisyearlimit", startThisYear, endThisYear)
+
+        startThisYear = startThisYear.split('T')[0] + " " + startThisYear.split('T')[1].slice(0,8)
+        endThisYear = endThisYear.split('T')[0] + " " + endThisYear.split('T')[1].slice(0,8)
+        console.log("getthisyearlimit", startThisYear, endThisYear)
+
+        return {startThisYear: startThisYear, endThisYear: endThisYear}
+    },
     addDays: function (date, days) {
         let result = new Date(date);
         console.log("date addays init", result)
@@ -87,27 +112,106 @@ export default {
         result = moment(result).tz(timezone).format()
         result = result.split('T')[0] + " " + result.split('T')[1].slice(0,8)
         return result;
-    }
+    },
+    isSameDate(date1, date2) {
+        const x = date1.getDate()
+        const y = date1.getMonth()
+        const z = date1.getFullYear()
+        const a = date2.getDate()
+        const b = date2.getMonth()
+        const c = date2.getFullYear()
+        return (x === a && y === b && z === c);
+    },
+    getDayStartTimes(list) {
+
+        let onlyStarts = []
+        let dayStartTimes = []
+    
+        for (const element of list) {
+            if (!(onlyStarts.includes(element.start))) {
+                onlyStarts.push(element.start)
+            }
+        }
+        onlyStarts = onlyStarts.sort()
+    
+        dayStartTimes.push(onlyStarts[0])
+    
+        for (let i=1; i<onlyStarts.length; i++) {
+            const date1 = new Date(onlyStarts[i-1])
+            const date2 = new Date(onlyStarts[i])
+            
+            if (!this.isSameDate(date1, date2)) {
+                dayStartTimes.push(onlyStarts[i])
+            } else if (date2 < date1) {
+                dayStartTimes[i-1] = onlyStarts[i]
+            } 
+            dayStartTimes = dayStartTimes.sort()
+        }
+        return dayStartTimes
+    },
+    getDayEndTimes(list) {
+
+        let onlyEnds = []
+        let dayEndTimes = []
+    
+        for (const element of list) {
+            if (!(onlyEnds.includes(element.end))) {
+                onlyEnds.push(element.end)
+            }
+        }
+        onlyEnds = onlyEnds.sort()
+    
+        dayEndTimes.push(onlyEnds[0])
+    
+        for (let i=1; i<onlyEnds.length; i++) {
+            const date1 = new Date(onlyEnds[i-1])
+            const date2 = new Date(onlyEnds[i])
+            
+            if (!this.isSameDate(date1, date2)) {
+                dayEndTimes.push(onlyEnds[i])
+            } else if (date2 > date1) {
+                dayEndTimes[i-1] = onlyEnds[i]
+            } 
+        }
+        return dayEndTimes
+    },
+    getWorkingTimeByMonth: function (list) {
+        const monthList= this.getMonthList(list)
+        let weekWorkTimeByMonth = [];
+        let totalYearTime = 0;
+        for (let i = 0; i < monthList.length; i++) {
+            weekWorkTimeByMonth[i] = 0;
+            for (const element of monthList[i]) {
+                let start = new Date(element.start)
+                let end = new Date(element.end)
+                let time = end - start
+                weekWorkTimeByMonth[i] = weekWorkTimeByMonth[i] + time
+            }
+            weekWorkTimeByMonth[i] = weekWorkTimeByMonth[i]/3.6e+6/7
+        }
+        for (const element of weekWorkTimeByMonth) {
+            totalYearTime = totalYearTime + element
+        }
+        totalYearTime = Math.round((totalYearTime)*100)/100
+
+        return {weekWorkTimeByMonth: weekWorkTimeByMonth, totalYearTime:totalYearTime}
+    },
 }
 
 
-
-// console.log(getDaysList("2022-10-24 00:00:00", "2022-10-31 01:00:00"))
-// function getThisWeekLimits() {
-//     let today = new Date()
-//     console.log("today", today)
-//     let day = today.getDay()
-//     let start = new Date()
-//     let end = new Date()
-//     start.setDate(today.getDate() - day +1)
-//     end.setDate(today.getDate() + 6 - day+1)
-//     start.setHours(0,0,0,0)
-//     end.setHours(0,0,0,0)
-//     return [start, end]
-// }
-
-// console.log(getThisWeekDates())
 // const test = [
+//     {
+//         end: "2022-10-28T18:05:23",
+//         id: 12,
+//         start: "2022-10-28T14:05:23",
+//         user: 1
+//     },
+//     {
+//         end: "2022-10-28T12:05:23",
+//         id: 9,
+//         start: "2022-10-28T09:05:23",
+//         user: 1
+//     },
 //     {
 //         end: "2022-10-24T12:05:23",
 //         id: 5,
@@ -118,6 +222,12 @@ export default {
 //         end: "2022-10-25T12:05:23",
 //         id: 6,
 //         start: "2022-10-25T09:05:23",
+//         user: 1
+//     },
+//     {
+//         end: "2022-10-25T18:05:23",
+//         id: 12,
+//         start: "2022-10-25T14:05:23",
 //         user: 1
 //     },
 //     {
@@ -133,12 +243,6 @@ export default {
 //         user: 1
 //     },
 //     {
-//         end: "2022-10-28T12:05:23",
-//         id: 9,
-//         start: "2022-10-28T09:05:23",
-//         user: 1
-//     },
-//     {
 //         end: "2022-10-29T12:05:23",
 //         id: 10,
 //         start: "2022-10-29T09:05:23",
@@ -148,12 +252,6 @@ export default {
 //         end: "2022-10-30T12:05:23",
 //         id: 11,
 //         start: "2022-10-30T09:05:23",
-//         user: 1
-//     },
-//     {
-//         end: "2022-10-28T18:05:23",
-//         id: 12,
-//         start: "2022-10-28T14:05:23",
 //         user: 1
 //     },
 //     {
@@ -182,6 +280,5 @@ export default {
 //     }
 // ]
 
-// // console.log(getWeekList(test))
-
-// console.log(getWeekWorkTime(getWeekList(test)))
+// let result = getDayEndTimes(test)
+// console.log(result)
