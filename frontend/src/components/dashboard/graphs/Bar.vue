@@ -5,18 +5,19 @@
             <div class="card-content">
               <div class="row">
                 <div class="col s12">
-                      <span class="card-title">{{`Week working time`}}</span>
+                      <span class="card-title"><strong>Week Working time ({{contract}} hours contract)</strong></span>
+                      <span class="card-title" v-bind:class=(colorWeek)><strong>total:  {{totalWeekWorkTime}} hours </strong></span>
                 </div>
               </div>
               <div class="row">
-                <div class="col s1">
-                      <button class="btn waves-effect waves-light" v-on:click="getPreviousWeek"><i class="material-icons">chevron_left</i></button>
+                <div class="col s2">
+                      <button class="btn waves-effect waves-light left " v-on:click="getPreviousWeek"><i class="material-icons">chevron_left</i></button>
                 </div>
-                <div class="col s4 offset-s1">
-                      <span class="card-title">{{`from ${startShow} to ${endShow} in hours`}}</span>
+                <div class="col s8 center">
+                      <span class="card-title">from <strong>{{startShow}}</strong> to <strong>{{endShow}}</strong></span>
                 </div>
-                <div class="col s4">
-                      <button class="btn waves-effect waves-light" v-on:click="getNextWeek"><i class="material-icons">chevron_right</i></button>
+                <div class="col s2">
+                      <button class="btn waves-effect waves-light right" v-on:click="getNextWeek"><i class="material-icons">chevron_right</i></button>
                 </div>
               </div>
               <div class="row">
@@ -93,9 +94,12 @@
         startShow: null,
         endShow: null,
         weekWorkingTime: null,
+        totalWeekWorkTime: null,
         labelsDates: null,
         startV: null,
         endV: null,
+        colorWeek: "blue",
+        contract: 35
       }),
       methods: {
         async getPreviousWeek() {
@@ -113,7 +117,13 @@
         async show(start, end) {
           const userID=this.$route.params.userID
           const res = await WorkingTime.getAllWorkingTimesUser(userID, start, end)
-          this.weekWorkingTime = tools.getWeekWorkTime(res.data)
+          this.weekWorkingTime = tools.getWeekWorkTime(res.data).weekWorkTimeByDay
+          this.totalWeekWorkTime = tools.getWeekWorkTime(res.data).totalWeekWorkTime
+          if (this.totalWeekWorkTime < 35) {
+            this.colorWeek = "red-text"
+          } else {
+            this.colorWeek = "green-text"
+          }
           this.startShow = start.slice(0, 10)
           this.endShow = end.slice(0, 10)
           this.labelsDates = tools.getDaysList(start)
