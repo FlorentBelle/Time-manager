@@ -117,8 +117,9 @@
         async show(start, end) {
           const userID=this.$route.params.userID
           const res = await WorkingTime.getAllWorkingTimesUser(userID, start, end)
-          this.weekWorkingTime = tools.getWeekWorkTime(res.data).weekWorkTimeByDay
-          this.totalWeekWorkTime = tools.getWeekWorkTime(res.data).totalWeekWorkTime
+          const getWeekWorkTimeResult = tools.getWeekWorkTime(res.data)
+          this.weekWorkingTime = getWeekWorkTimeResult.weekWorkTimeByDay
+          this.totalWeekWorkTime = getWeekWorkTimeResult.totalWeekWorkTime
           if (this.totalWeekWorkTime < 35) {
             this.colorWeek = "red-text"
           } else {
