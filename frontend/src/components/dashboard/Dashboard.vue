@@ -1,14 +1,17 @@
 
 <template>
-    <h1>Dashboard</h1>
-    <button>
-        <router-link to="/">All</router-link>
+    <h3>Dashboard</h3>
+    <button class="btn waves-effect waves-light color white">
+        <router-link :to="{path: `/${userID}`}">All</router-link>
     </button>
-    <button>
-        <router-link to="/bar">bar</router-link>
+    <button class="btn waves-effect waves-light color white">
+        <router-link :to="{path: `/${userID}/bar`}">bar</router-link>
     </button>
-    <button>
-        <router-link to="/line">line</router-link>
+    <button class="btn waves-effect waves-light color white">
+        <router-link :to="{path: `/${userID}/line`}">line</router-link>
+    </button>
+    <button class="btn waves-effect waves-light color white">
+        <router-link :to="{path: `/${userID}/line`}">line</router-link>
     </button>
     <router-view></router-view>
 </template>
@@ -18,6 +21,7 @@
 export default {
   data: function() {
        return {
+        userID: this.$route.params.userID
         }
     },
     mounted () {
