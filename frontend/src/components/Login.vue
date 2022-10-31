@@ -3,6 +3,9 @@
 </script>
 
 <template>
+  <div class="login-logo-container">
+    <img class="login-logo" src="../assets/tm_logo_lighter.png">
+  </div>
   <div v-if="!this.$store.state.userConnected.isConnected" class="login-form-container">
     <div class="login-form" role="form">
       <h5 class="login-form-title">Login</h5>
@@ -54,7 +57,7 @@
     },
     methods: {
       createUser: function() {
-        fetch("http://localhost:4000/api/users", {
+        fetch(import.meta.env.VITE_API_URL + "/users", {
               mode: 'cors',
               method: "POST",
               body: JSON.stringify({
@@ -69,7 +72,7 @@
           .then(json => console.log(json));
       },
       getUser: function() {
-        fetch("http://localhost:4000/api/users?username=" + this.user.username + "&email=" + this.user.email, {
+        fetch(import.meta.env.VITE_API_URL + "/users?username=" + this.user.username + "&email=" + this.user.email, {
               mode: 'cors',
               headers: {
                   "Content-type": "application/json; charset=UTF-8"
@@ -94,7 +97,7 @@
                   email: json.content[0].email,
               })
 
-              router.push('/home')
+              router.replace('/home')
           }
           );
       }
@@ -103,24 +106,33 @@
 </script>
 
 <style lang="scss" scoped>
+  .login-logo-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 30%;
+    .login-logo {
+      width: 200px;
+    }
+  }
   .login-form-container {
     width: 100%;
-    height: 100%;
+    height: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
     .login-form {
-      width: 500px;
-      height: 650px;
+      width: 20em;
+      height: 30em;
       margin: auto;
-      background-color: #000000;
+      background-color: var(--bg-4);
       border-radius: 10px;
-      padding: 60px 30px;
+      padding: 50px 25px;
       .login-form-title {
         width: 80%;
         margin: auto;
-        font-size: 26px;
-        color: #ffffff;
+        font-size: 18px;
+        color: var(--color-2);
         margin-top: 0;
         margin-bottom: 30px;
       }
@@ -134,16 +146,23 @@
           width: 100%;
           margin-bottom: 30px;
           label {
-            font-size: 14px;
+            font-size: 12px;
             margin-bottom: 10px;
+            color: var(--color-2);
           }
           input {
             background-color: rgba($color: #ffffff, $alpha: 0.95);
-            border-radius: 5px;
+            border-radius: 10px;
             width: calc(100% - 20px);
+            height: 20px;
+            border: 1px solid #ffffff;
+            &:hover {
+              border: 1px solid var(--color-1);
+            }
           }
           input[type="text"] {
             padding: 0 10px;
+            font-size: 12px;
           }
         }
       }
@@ -152,18 +171,19 @@
         justify-content: center;
         align-items: center;
         flex-direction: column;
-        margin-top: 75px;
+        margin-top: 25px;
         .login-form-button-create {
           border: none;
-          padding: 10px;
-          background-color: #1BA8F0;
-          border-radius: 5px;
-          color: #ffffff;
+          border-radius: 10px;
+          padding: 5px;
+          background-color: var(--color-1);
+          color: var(--color-2);
           margin-top: 20px;
-          width: 160px;
-          height: 55px;
-          font-size: 18px;
-          font-weight: 500;
+          width: 80px;
+          height: 25px;
+          font-size: 12px;
+          font-weight: 400;
+          text-align: center;
           &:hover {
             filter: brightness(1.25);
             cursor: pointer;
@@ -171,19 +191,20 @@
         }
         .login-form-button-separator {
           width: 80%;
-          border-top: 1px solid white;
+          border-top: 1px solid var(--color-1);
         }
         .login-form-button-connect {
           border: none;
-          padding: 10px;
-          background-color: #01AE66;
-          border-radius: 5px;
-          color: #ffffff;
+          padding: 5px;
+          background-color: var(--color-3);
+          border-radius: 10px;
+          color: var(--color-2);
           margin-bottom: 20px;
-          width: 160px;
-          height: 55px;
-          font-size: 18px;
-          font-weight: 500;
+          width: 80px;
+          height: 30px;
+          font-size: 12px;
+          font-weight: 400;
+          text-align: center;
           &:hover {
             filter: brightness(1.25);
             cursor: pointer;

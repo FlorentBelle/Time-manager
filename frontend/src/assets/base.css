@@ -1,3 +1,14 @@
+:root {
+  --color-1:#aa6fcf;
+  --color-2:#e0e0e0;
+  --color-3:#d63a32;
+  --color-3:#2eb194;
+
+  --bg-1:#302e3a;
+  --bg-2:#3d3049;
+  --bg-3:#0d0c0e;
+  --bg-4:#1c1c20;
+}
 *,
 *::before,
 *::after {
