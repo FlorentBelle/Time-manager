@@ -5,13 +5,13 @@
         <router-link :to="{path: `/${userID}`}">All</router-link>
     </button>
     <button class="btn waves-effect waves-light color white">
-        <router-link :to="{path: `/${userID}/bar`}">bar</router-link>
+        <router-link :to="{path: `/${userID}/bar`}">Week</router-link>
     </button>
     <button class="btn waves-effect waves-light color white">
-        <router-link :to="{path: `/${userID}/line`}">line</router-link>
+        <router-link :to="{path: `/${userID}/line`}">Year</router-link>
     </button>
     <button class="btn waves-effect waves-light color white">
-        <router-link :to="{path: `/${userID}/line`}">line</router-link>
+        <router-link :to="{path: `/${userID}/doughnut`}">Day</router-link>
     </button>
     <router-view></router-view>
 </template>
