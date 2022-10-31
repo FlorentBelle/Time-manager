@@ -18,9 +18,8 @@ defmodule ApiWeb.ClocksController do
   end
 
   def retrieve(conn, params) do
-    clockId = String.to_integer(params["id"])
     userID = params["userID"]
-    retrieved = Repo.one(from c in Clocks, where: c.user == ^userID, where: c.id == ^clockId)
+    retrieved = Repo.one(from c in Clocks, where: c.user == ^userID)
     if (retrieved !== nil) do
       conn |> render(ApiWeb.ClocksView, "get_clock.json", %{status: "200", success: true, message: "Clock found", content: retrieved})
     else

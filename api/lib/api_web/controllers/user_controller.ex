@@ -3,6 +3,7 @@ defmodule ApiWeb.UserController do
 
   import Ecto.Query
 
+  alias Api.Clocks
   alias Api.User
   alias Api.Repo
 
@@ -12,7 +13,9 @@ defmodule ApiWeb.UserController do
     case params |> User.create_user() do
       {:ok, %User{} = user} ->
         newUser = %{ id: user.id, username: user.username, email: user.email}
-        conn |> render(ApiWeb.UserView, "user_view.json", %{status: 201, success: true, message: "User created", content: newUser})
+        user_id = user.id
+        Repo.insert(%Clocks{user: user_id})
+        conn |> render(ApiWeb.UserView, "user_view.json", %{status: 201, success: true, message: "User created", content: %{user: newUser, user_id: user_id}})
       _ ->
         if(Repo.exists?(from u in User, where: u.email == ^email)) do
           conn |> render(ApiWeb.ErrorView, "error.json", %{status: 409, error: "User already exists"})
