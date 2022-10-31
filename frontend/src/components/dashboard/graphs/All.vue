@@ -7,7 +7,7 @@
 			<Line/>
 		</div>
 		<div class="col s4">
-			<Another/>
+			<Doughnut/>
 		</div>
 	</div>
 </template>
@@ -16,13 +16,13 @@
 
 import Bar from './Bar.vue'
 import Line from './Line.vue'
-import Another from './Another.vue'
+import Doughnut from './Doughnut.vue'
 
 export default {
   components: {
 		Bar,
 		Line,
-		Another
+		Doughnut
 	},
 	data: function() {
 		return {
