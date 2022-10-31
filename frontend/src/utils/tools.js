@@ -92,17 +92,26 @@ export default {
         let startThisYear = new Date(thisYear, 0, 1)
         let endThisYear = new Date(thisYear, 11, 31)
         endThisYear.setHours(23, 59, 59, 0)
-        console.log("getthisyearlimit", startThisYear, endThisYear)
       
         startThisYear = moment(startThisYear).tz(timezone).format()
         endThisYear = moment(endThisYear).tz(timezone).format()
-        console.log("getthisyearlimit", startThisYear, endThisYear)
 
         startThisYear = startThisYear.split('T')[0] + " " + startThisYear.split('T')[1].slice(0,8)
         endThisYear = endThisYear.split('T')[0] + " " + endThisYear.split('T')[1].slice(0,8)
-        console.log("getthisyearlimit", startThisYear, endThisYear)
 
         return {startThisYear: startThisYear, endThisYear: endThisYear}
+    },
+    getDayLimits: function() {
+        let today = new Date()
+        let start = today.setHours(0,0,0,0)
+        let end = today.setHours(23,59,59,0)
+        start = moment(start).tz(timezone).format()
+        end = moment(end).tz(timezone).format()
+
+        start = start.split('T')[0] + " " + start.split('T')[1].slice(0,8)
+        end = end.split('T')[0] + " " + end.split('T')[1].slice(0,8)
+
+        return {start: start, end: end}
     },
     addDays: function (date, days) {
         let result = new Date(date);
@@ -196,6 +205,48 @@ export default {
 
         return {weekWorkTimeByMonth: weekWorkTimeByMonth, totalYearTime:totalYearTime}
     },
+    getDayStats: function (list) {
+        let off = 0;
+        let breakTime = 0;
+        let workTime = 0;
+        let endDay = new Date(list[0].end)
+        let startDay = new Date(list[0].start)
+
+        for (const element of list) {
+            let start = new Date(element.start)
+            let end = new Date(element.end)
+            if (start <= startDay) {
+                startDay = start
+            } 
+            if (end >= endDay) {
+                endDay = end
+            }
+        }
+        for (const element of list) {
+            let start = new Date(element.start)
+            let end = new Date(element.end)
+            let time = end - start
+            workTime = workTime + time
+        }
+
+        let dayTime = endDay - startDay
+
+        dayTime = dayTime/3.6e+6
+        console.log("dayTime", dayTime)
+
+        workTime = workTime/3.6e+6
+        console.log("workTime", workTime)
+
+        breakTime = dayTime - workTime
+        console.log("breakTime", breakTime)
+
+        off = 24 - dayTime
+        console.log("off", off)
+
+
+        return ({work: workTime, off: off, break: breakTime})
+    },
+    timezone: timezone
 }
 
 
