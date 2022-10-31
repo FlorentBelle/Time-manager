@@ -29,13 +29,14 @@ defmodule ApiWeb.Router do
     put "/users/:userID", UserController, :update
     delete "/users/:userID", UserController, :delete
 
-    post "/working_times", WorkingTimeController, :create
-    get "/users/:userID/working_times", WorkingTimeController, :retrieveAll
-    get "/users/:userID/working_times/:id", WorkingTimeController, :retrieve
-    put "/working_times/:id", WorkingTimeController, :update
-    delete "/working_times/:id", WorkingTimeController, :delete
+    post "/workingtimes/:userID", WorkingTimeController, :create
+    get "/workingtimes/:userID", WorkingTimeController, :retrieveAll
+    get "/users/:userID/workingtimes/:id", WorkingTimeController, :retrieve
+    put "/workingtimes/:id", WorkingTimeController, :update
+    delete "/workingtimes/:id", WorkingTimeController, :delete
 
     post "/clocks", ClocksController, :create
+    put "/clocks/:id", ClocksController, :update
     get "/clocks/:userID", ClocksController, :retrieve
   end
 end

@@ -56,17 +56,17 @@
         
       },
         updateWorkingTime: function () {
-          this.starttime;
-          this.endtime;
+          var newSt = this.starttime;
+          newSt = newSt.replaceAll('T', ' ') + "Z";
+          var newEt = this.endtime;
+          newEt = newEt.replaceAll('T', ' ') + "Z";
           this.id;
-          console.log('id : ', this.id, " start : ", this.starttime, " end : ", this.endtime);
-        
-          fetch("http://localhost:4000/api/workingtimes/" + this.id, {
+          fetch(import.meta.env.VITE_API_URL +"/workingtimes/" + this.id, {
               mode: 'cors',
               method: "PUT",
               body: JSON.stringify({
-                start: this.starttime,
-                end: this.endtime
+                start: newSt,
+                end: newEt
               }),
               headers: {
                   "Content-type": "application/json; charset=UTF-8"

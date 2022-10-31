@@ -23,6 +23,21 @@
     </div>
 
     <div class="card-menu">
+      <h2 class="card-menu-title">Clock</h2>
+      <p class="card-menu-description">Clock Gestion</p>
+      <p class="card-menu-description">{{this.startedFrom.hours}} : {{this.startedFrom.minutes}} : {{this.startedFrom.seconds}}</p>
+      <p class="card-menu-description" v-if="clock.status === true"> {{this.startedFrom.hours}} : {{this.startedFrom.minutes}} : {{this.startedFrom.seconds}}</p>
+      <div class="card-menu-icon">
+        <svg viewBox="0 0 24 24">
+          <path d="m12 1.25a10.75 10.75 0 1 0 10.75 10.75 10.762 10.762 0 0 0 -10.75-10.75zm-6.25 10.75a.75.75 0 0 1 -1.5 0 7.759 7.759 0 0 1 7.75-7.75 7.651 7.651 0 0 1 2.991.6.75.75 0 1 1 -.582 1.382 6.174 6.174 0 0 0 -2.409-.482 6.257 6.257 0 0 0 -6.25 6.25zm11.86-4.564-4.247 5.945a1.5 1.5 0 1 1 -1.363-.881c.048 0 .093.01.14.014l4.25-5.95a.75.75 0 1 1 1.22.872zm1.39 5.314a.75.75 0 0 1 -.75-.75 5.909 5.909 0 0 0 -.2-1.556.75.75 0 1 1 1.449-.388 7.486 7.486 0 0 1 .251 1.944.75.75 0 0 1 -.75.75z"/>
+        </svg>
+      </div>
+        <button class="card-menu-button" v-if="clock.status === false" @click="startClock()">Start Clock</button>
+        <button class="card-menu-button" v-if="clock.status === true" @click="startClock()">End Clock</button>
+    </div>
+    
+
+    <div class="card-menu">
       <h2 class="card-menu-title">Dashboard</h2>
       <p class="card-menu-description">Visualize your working times with charts and graphs</p>
       <div class="card-menu-icon">
@@ -61,6 +76,61 @@
 </template>
   
 <script>
+import { useTime } from "vue-timer-hook";
+const time = useTime()
+
+  export default {
+      data: function() {
+           return {
+            clock: {
+              id:-1,
+              status:false,
+              time:"",
+              user:-1
+            },
+            startedFrom: useTime(),
+            startedAt: ""
+            }
+  
+        },
+        mounted () {
+          this.getClock();
+        },
+        methods: {
+          startClock: function() {
+            var clockid = this.clock.id
+            fetch(import.meta.env.VITE_API_URL + "/clocks/" + clockid, {
+            method: 'PUT',
+            mode: 'cors',
+            headers: {
+              "Content-type": "application/json; charset=UTF-8"
+            }
+          })
+          .then(response => response.json())
+          .then(json => {
+            this.clock = json.content
+            console.log(json);
+            //this.getClock();
+          })
+          
+          
+        },
+          getClock: function() {
+            var userID = this.$store.state.userConnected.id
+            fetch(import.meta.env.VITE_API_URL + "/clocks/" + userID, {
+            mode: 'cors',
+            headers: {
+              "Content-type": "application/json; charset=UTF-8"
+            }
+          })
+          .then(response => response.json())
+          .then(json => {
+            this.clock = json.content
+          })
+          }
+      }
+    }
+
 </script>
 
 <style scoped lang="scss">

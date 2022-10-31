@@ -3,6 +3,7 @@ defmodule ApiWeb.ClocksController do
 
   import Ecto.Query
 
+  alias Api.WorkingTimes
   alias Api.Clocks
   alias Api.Repo
 
@@ -26,4 +27,31 @@ defmodule ApiWeb.ClocksController do
       conn |> render(ApiWeb.ErrorView, "error.json", %{status: "403", error: "No clock found"})
     end
   end
+
+  def update(conn, params) do
+    id = params["id"]
+
+    if(id !== nil) do
+      id = String.to_integer(params["id"])
+      clock = Repo.one(from w in Clocks, where: w.id == ^id)
+      if (clock.status === false) do
+        newParams = %{time: DateTime.utc_now(), status: true}
+        clock
+        |> Clocks.changeset(newParams)
+        |> Repo.update()
+        conn |> render(ApiWeb.WorkingTimesView, "working_time_view.json", %{status: 200, success: true, message: "Working time started for this user", content: params})
+      else
+        newParams = %{time: DateTime.utc_now(), status: false}
+        time = DateTime.truncate(newParams.time, :second)
+        clock
+        |> Clocks.changeset(newParams)
+        |> Repo.update()
+        Repo.insert(%WorkingTimes{user: clock.user, start: clock.time, end: time})
+        conn |> render(ApiWeb.WorkingTimesView, "working_time_view.json", %{status: 200, success: true, message: "Working time stopped for this user", content: params})
+      end
+    else
+      conn |> render(ApiWeb.ErrorView, "error.json", status: 404, error: "Route not found")
+    end
+  end
+
 end

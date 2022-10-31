@@ -15,11 +15,11 @@ defmodule ApiWeb.WorkingTimeController do
     {:ok, dt_struct, utc_offset} = DateTime.from_iso8601(params["start"])
     start_parse = DateTime.truncate(dt_struct, :second)
 
-    userId = params["user"]
+    userId = params["userID"]
     user = Repo.one(from u in User, where: u.id == ^userId)
 
     if (user !== nil) do
-      Repo.insert(%WorkingTimes{end: end_parse, start: start_parse, user: userId})
+      Repo.insert(%WorkingTimes{end: end_parse, start: start_parse, user: user.id})
       conn |> render(ApiWeb.WorkingTimesView, "working_time_view.json", %{status: 201, success: true, message: "Workingtime registered", content: user})
     else
       conn |> render(ApiWeb.ErrorView, "error.json", status: 403, error: "No user found")
@@ -102,10 +102,15 @@ defmodule ApiWeb.WorkingTimeController do
 
     if(id !== nil) do
       id = String.to_integer(params["id"])
+      {:ok, dt_struct, utc_offset} = DateTime.from_iso8601(params["end"])
+      end_parse = DateTime.truncate(dt_struct, :second)
+      {:ok, dt_struct, utc_offset} = DateTime.from_iso8601(params["start"])
+      start_parse = DateTime.truncate(dt_struct, :second)
+      newParams = %{start: start_parse, id: id, end: end_parse}
       working_time = Repo.one(from w in WorkingTimes, where: w.id == ^id)
       if(working_time !== nil) do
         working_time
-        |> WorkingTimes.changeset(params)
+        |> WorkingTimes.changeset(newParams)
         |> Repo.update()
         conn |> render(ApiWeb.WorkingTimesView, "working_time_view.json", %{status: 200, success: true, message: "Working time updated for this user", content: params})
       else

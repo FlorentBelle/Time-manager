@@ -48,11 +48,9 @@
           
         },
         createWorkingTime: function () {
-            this.starttime;
-            this.endtime;
-            console.log(" start : ", this.starttime, " end : ", this.endtime);
-        
-            fetch("http://localhost:4000/api/workingtimes/" + this.$store.state.userConnected.id, {
+            this.starttime =  this.starttime.replaceAll('T', ' ') + ":00Z";
+            this.endtime =  this.endtime.replaceAll('T', ' ') + ":00Z";
+            fetch(import.meta.env.VITE_API_URL +"/workingtimes/" + this.$store.state.userConnected.id, {
                 mode: 'cors',
                 method: "POST",
                 body: JSON.stringify({

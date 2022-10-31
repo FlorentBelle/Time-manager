@@ -3,6 +3,8 @@ import { createStore } from 'vuex'
 import App from './App.vue'
 import router from './router'
 import './assets/main.css'
+import VCalendar from 'v-calendar';
+import { SetupCalendar, Calendar, DatePicker } from 'v-calendar';
 
 // Create a new store instance.
 const store = createStore({
@@ -20,6 +22,9 @@ const store = createStore({
 
 
 const app = createApp(App)
+app.component('Calendar', Calendar)
+app.component('DatePicker', DatePicker)
+app.use(VCalendar, {})
 app.use(store)
 app.use(router)
 app.mount('#app')
