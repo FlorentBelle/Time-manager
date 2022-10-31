@@ -2,42 +2,42 @@ import Api from "./Api";
 
 export default {
  
-    // getAllWorkingTimesUser: async function(userId, start, end) {
+    getAllWorkingTimesUser: async function(userId, start, end) {
         
-    //     if (start && end) {
-    //         const response = await fetch(`${Api}/users/${userId}/working_times?start=${start}&end=${end}`, {
-    //             mode: 'cors',
-    //             headers: {
-    //                 "Content-type": "application/json; charset=UTF-8"
-    //             }
-    //         });
-    //         return response.json()
-    //     } else if (start && !end) {
-    //         const response = await fetch(`${Api}/users/${userId}/working_times?start=${start}`, {
-    //             mode: 'cors',
-    //             headers: {
-    //                 "Content-type": "application/json; charset=UTF-8"
-    //             }
-    //         });
-    //         return response.json()
-    //     } else if (end && !start) {
-    //         const response = await fetch(`${Api}/users/${userId}/working_times?end=${end}`, {
-    //             mode: 'cors',
-    //             headers: {
-    //                 "Content-type": "application/json; charset=UTF-8"
-    //             }
-    //         });
-    //         return response.json()
-    //     } else {
-    //         const response = await fetch(`${Api}/users/${userId}/working_times`, {
-    //             mode: 'cors',
-    //             headers: {
-    //                 "Content-type": "application/json; charset=UTF-8"
-    //             }
-    //         });
-    //         return response.json()
-    //     }
-    // },
+        if (start && end) {
+            const response = await fetch(`${Api}/users/${userId}/working_times?start=${start}&end=${end}`, {
+                mode: 'cors',
+                headers: {
+                    "Content-type": "application/json; charset=UTF-8"
+                }
+            });
+            return response.json()
+        } else if (start && !end) {
+            const response = await fetch(`${Api}/users/${userId}/working_times?start=${start}`, {
+                mode: 'cors',
+                headers: {
+                    "Content-type": "application/json; charset=UTF-8"
+                }
+            });
+            return response.json()
+        } else if (end && !start) {
+            const response = await fetch(`${Api}/users/${userId}/working_times?end=${end}`, {
+                mode: 'cors',
+                headers: {
+                    "Content-type": "application/json; charset=UTF-8"
+                }
+            });
+            return response.json()
+        } else {
+            const response = await fetch(`${Api}/users/${userId}/working_times`, {
+                mode: 'cors',
+                headers: {
+                    "Content-type": "application/json; charset=UTF-8"
+                }
+            });
+            return response.json()
+        }
+    },
     getOneWorkingTimesUser: async function(userId,workingTimeId) {
         const response = await fetch(`${Api}/users/${userId}/workingtimes/${workingTimeId}`, {
         mode: 'cors',
@@ -78,47 +78,46 @@ export default {
         }
         });
         return response.json()
-    },
-
+    }
 
 // ci -dessous pour ma connection à mopn api perso
 
 
-    getAllWorkingTimesUser: async function(userId, start, end) {
+    // getAllWorkingTimesUser: async function(userId, start, end) {
         
-        if (start && end) {
-            const response = await fetch(`${Api}/working_times/${userId}?start=${start}&end=${end}`, {
-                mode: 'cors',
-                headers: {
-                    "Content-type": "application/json; charset=UTF-8"
-                }
-            });
-            return response.json()
-        } else if (start && !end) {
-            const response = await fetch(`${Api}/working_times/${userId}?start=${start}`, {
-                mode: 'cors',
-                headers: {
-                    "Content-type": "application/json; charset=UTF-8"
-                }
-            });
-            return response.json()
-        } else if (end && !start) {
-            const response = await fetch(`${Api}/working_times/${userId}?end=${end}`, {
-                mode: 'cors',
-                headers: {
-                    "Content-type": "application/json; charset=UTF-8"
-                }
-            });
-            return response.json()
-        } else {
-            const response = await fetch(`${Api}/working_times/${userId}`, {
-                mode: 'cors',
-                headers: {
-                    "Content-type": "application/json; charset=UTF-8"
-                }
-            });
-            return response.json()
-        }
-    }
+    //     if (start && end) {
+    //         const response = await fetch(`${Api}/working_times/${userId}?start=${start}&end=${end}`, {
+    //             mode: 'cors',
+    //             headers: {
+    //                 "Content-type": "application/json; charset=UTF-8"
+    //             }
+    //         });
+    //         return response.json()
+    //     } else if (start && !end) {
+    //         const response = await fetch(`${Api}/working_times/${userId}?start=${start}`, {
+    //             mode: 'cors',
+    //             headers: {
+    //                 "Content-type": "application/json; charset=UTF-8"
+    //             }
+    //         });
+    //         return response.json()
+    //     } else if (end && !start) {
+    //         const response = await fetch(`${Api}/working_times/${userId}?end=${end}`, {
+    //             mode: 'cors',
+    //             headers: {
+    //                 "Content-type": "application/json; charset=UTF-8"
+    //             }
+    //         });
+    //         return response.json()
+    //     } else {
+    //         const response = await fetch(`${Api}/working_times/${userId}`, {
+    //             mode: 'cors',
+    //             headers: {
+    //                 "Content-type": "application/json; charset=UTF-8"
+    //             }
+    //         });
+    //         return response.json()
+    //     }
+    // }
 
 }

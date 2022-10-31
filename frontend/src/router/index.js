@@ -15,10 +15,10 @@ import Doughnut from '../components/dashboard/graphs/Doughnut.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
-    // {
-    //   path: '/',
-    //   component: Login,
-    // },
+    {
+      path: '/',
+      component: Login,
+    },
     {
       path: '/home',
       component: Home
@@ -36,8 +36,8 @@ const router = createRouter({
       component: WorkingTimeUpdate
     },
     {
-      // path: '/chart_manager/:userID',
-      path: '/:userID',
+      path: '/chart_manager/:userID',
+      // path: '/:userID',
       
       component: Dashboard,
       children: [
