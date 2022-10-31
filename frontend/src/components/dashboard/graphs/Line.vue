@@ -12,8 +12,8 @@
           <div class="row">
             <div class="col s12">
               <Line v-if="loaded"
-                :chart-options="chartOptions"
-                :chart-data="chartData"
+                :chartOptions="chartOptions"
+                :chartData="chartData"
                 :chartId = "chartId"
                 :width = "width"
                 :height = "height"
