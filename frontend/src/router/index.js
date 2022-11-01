@@ -64,13 +64,7 @@ const router = createRouter({
 })
 
 router.beforeEach(async (to, from) => {
-  if (
-    // make sure the user is authenticated
-    !JSON.parse(localStorage.userConnected).isConnected &&
-    // ❗️ Avoid an infinite redirect
-    to.name !== 'login'
-  ) {
-    // redirect the user to the login page
+  if (localStorage.userConnected != undefined && !JSON.parse(localStorage.userConnected).isConnected &&to.name !== 'login') {
     return { name: 'login' }
   }
 })

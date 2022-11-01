@@ -69,7 +69,38 @@
               }
           })
           .then(response => response.json())
-          .then(json => console.log(json));
+          .then(json => {
+            console.log(json )
+            console.log("___________________________________")
+            if (json.status === 201) {
+              this.$toast.success('Bien créer !', {
+                  position: "top-right"
+              });
+              this.userConnected.isConnected = true;
+              this.userConnected.id = json.content.user.id
+              this.userConnected.username = json.content.user.username
+              this.userConnected.email = json.content.user.email
+            
+              this.$store.state.userConnected.isConnected = true
+              this.$store.state.userConnected.id = json.content.user.id
+              this.$store.state.userConnected.username = json.content.user.username
+              this.$store.state.userConnected.email = json.content.user.email
+
+                localStorage.userConnected = JSON.stringify({
+                    isConnected: true,
+                    id: json.content.user.id,
+                    username: json.content.user.username,
+                    email: json.content.user.email,
+                })
+                router.replace('/home')
+            }
+            else {
+              this.$toast.error(json.error, {
+                position: "top-right"
+              });
+            }
+            
+          });
       },
       getUser: function() {
         fetch(import.meta.env.VITE_API_URL + "/users?username=" + this.user.username + "&email=" + this.user.email, {
@@ -80,24 +111,36 @@
           })
           .then(response => response.json())
           .then(json => {
-              this.userConnected.isConnected = true;
-              this.userConnected.id = json.content[0].id
-              this.userConnected.username = json.content[0].username
-              this.userConnected.email = json.content[0].email
-            
-              this.$store.state.userConnected.isConnected = true
-              this.$store.state.userConnected.id = json.content[0].id
-              this.$store.state.userConnected.username = json.content[0].username
-              this.$store.state.userConnected.email = json.content[0].email
+              console.log('json = ', json)
+              if (json.status === 200) {
+                this.userConnected.isConnected = true;
+                this.userConnected.id = json.content[0].id
+                this.userConnected.username = json.content[0].username
+                this.userConnected.email = json.content[0].email
+              
+                this.$store.state.userConnected.isConnected = true
+                this.$store.state.userConnected.id = json.content[0].id
+                this.$store.state.userConnected.username = json.content[0].username
+                this.$store.state.userConnected.email = json.content[0].email
 
-              localStorage.userConnected = JSON.stringify({
-                  isConnected: true,
-                  id: json.content[0].id,
-                  username: json.content[0].username,
-                  email: json.content[0].email,
-              })
+                localStorage.userConnected = JSON.stringify({
+                    isConnected: true,
+                    id: json.content[0].id,
+                    username: json.content[0].username,
+                    email: json.content[0].email,
+                })
 
-              router.replace('/home')
+                this.$toast.success('Well logged !', {
+                  position: "top-right"
+                });
+
+                router.replace('/home')
+              }
+              else {
+                this.$toast.error(json.error, {
+                  position: "top-right"
+                });
+              }
           }
           );
       }

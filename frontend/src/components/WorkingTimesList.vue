@@ -72,7 +72,6 @@ export default {
       }*/
     },
     mounted () {
-      
       this.getWorkingTimesUser();
     },
     methods: {
@@ -91,14 +90,14 @@ export default {
             console.log(json);
 
             const month = new Date().getMonth();
-    const year = new Date().getFullYear();
+            const year = new Date().getFullYear();
 
             console.log(json);
             this.wT = json.content
            // const unixTimeZero = Date.parse(this.wT[0].start);
            
            var myObjs = []
-          var cpt = 1;
+            var cpt = 1;
            this.wT.forEach(element => {
 
             var dateStart = element.start.slice(0, -1);

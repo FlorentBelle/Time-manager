@@ -25,8 +25,13 @@
     <div class="card-menu">
       <h2 class="card-menu-title">Clock</h2>
       <p class="card-menu-description">Clock Gestion</p>
-      <p class="card-menu-description">{{this.startedFrom.hours}} : {{this.startedFrom.minutes}} : {{this.startedFrom.seconds}}</p>
-      <p class="card-menu-description" v-if="clock.status === true"> {{this.startedFrom.hours}} : {{this.startedFrom.minutes}} : {{this.startedFrom.seconds}}</p>
+      <p class="card-menu-description"> Current Time : <br>{{this.startedFrom.hours}} : {{this.startedFrom.minutes}} : {{this.startedFrom.seconds}}</p>
+      <p class="card-menu-description">
+          <span>Started at :<br> {{this.clock.time.split('T')[1].split(":")[0]}} : {{this.clock.time.split('T')[1].split(":")[1]}} : {{this.clock.time.split('T')[1].split(":")[2].slice(0,-1)}}</span>  
+
+      
+      </p>
+      <p class="card-menu-description" v-if="clock.status === true"> {{ this.startedWithClock.hours - this.hours}} : {{(this.startedWithClock.minutes - this.minutes < 0 ? 60 + this.startedWithClock.minutes - this.minutes : this.startedWithClock.minutes - this.minutes)}} : {{60 - this.startedFrom.seconds}}</p>
       <div class="card-menu-icon">
         <svg viewBox="0 0 24 24">
           <path d="m12 1.25a10.75 10.75 0 1 0 10.75 10.75 10.762 10.762 0 0 0 -10.75-10.75zm-6.25 10.75a.75.75 0 0 1 -1.5 0 7.759 7.759 0 0 1 7.75-7.75 7.651 7.651 0 0 1 2.991.6.75.75 0 1 1 -.582 1.382 6.174 6.174 0 0 0 -2.409-.482 6.257 6.257 0 0 0 -6.25 6.25zm11.86-4.564-4.247 5.945a1.5 1.5 0 1 1 -1.363-.881c.048 0 .093.01.14.014l4.25-5.95a.75.75 0 1 1 1.22.872zm1.39 5.314a.75.75 0 0 1 -.75-.75 5.909 5.909 0 0 0 -.2-1.556.75.75 0 1 1 1.449-.388 7.486 7.486 0 0 1 .251 1.944.75.75 0 0 1 -.75.75z"/>
@@ -88,8 +93,11 @@ const time = useTime()
               time:"",
               user:-1
             },
+            hours:0,
+            minutes:0,
+            seconds:0,
             startedFrom: useTime(),
-            startedAt: ""
+            startedWithClock: useTime()
             }
   
         },
@@ -112,8 +120,6 @@ const time = useTime()
             console.log(json);
             //this.getClock();
           })
-          
-          
         },
           getClock: function() {
             var userID = this.$store.state.userConnected.id
@@ -125,7 +131,16 @@ const time = useTime()
           })
           .then(response => response.json())
           .then(json => {
-            this.clock = json.content
+            this.clock.id = json.content.id;
+            this.clock.status = json.content.status
+            this.clock.time = json.content.time
+            this.clock.user = json.content.user
+            this.minutes = json.content.time.split('T')[1].split(':')[1]
+            
+            this.hours = json.content.time.split('T')[1].split(':')[0] - (this.startedWithClock.minutes - this.minutes < 0 ? -1 : 0)
+      
+
+            console.log("clock : ", json.content)
           })
           }
       }
