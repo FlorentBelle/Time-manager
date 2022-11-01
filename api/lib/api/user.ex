@@ -6,11 +6,13 @@ defmodule Api.User do
 
   alias Api.User
   alias Api.Repo
+  alias Api.Roles
 
-  @derive {Jason.Encoder, only: [:email, :username, :id, :inserted_at, :updated_at]}
+  @derive {Jason.Encoder, only: [:email, :username, :id, :inserted_at, :updated_at, :role_id]}
   schema "users" do
     field :email, :string
     field :username, :string
+    field :role_id, :id
 
     timestamps()
   end
@@ -18,7 +20,7 @@ defmodule Api.User do
   @doc false
   def changeset(user, attrs) do
     user
-    |> cast(attrs, [:username, :email])
+    |> cast(attrs, [:username, :email, :role_id])
     |> validate_required([:username, :email])
     |> validate_length(:username, min: 2)
     |> validate_format(:email, ~r/@/)

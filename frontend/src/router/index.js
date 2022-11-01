@@ -2,6 +2,9 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Login from '../components/Login.vue'
 import Home from '../components/Home.vue'
 import Profile from '../components/Profile.vue'
+
+import VueAdministrateur from '../components/VueAdministrateur.vue'
+import VueManager from '../components/VueManager.vue'
 import WorkingTimesList from '../components/WorkingTimesList.vue'
 import WorkingTimeUpdate from '../components/WorkingTimeUpdate.vue'
 import ClockManager from '../components/ClockManager.vue'
@@ -21,6 +24,13 @@ const router = createRouter({
       alias: '/login',
       name: 'login',
       component: Login,
+    },
+    {
+      path: '/adminView',
+      component: VueAdministrateur
+    },{
+      path: '/managerView',
+      component: VueManager
     },
     {
       path: '/home',

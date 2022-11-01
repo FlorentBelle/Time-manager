@@ -38,5 +38,16 @@ defmodule ApiWeb.Router do
     post "/clocks", ClocksController, :create
     put "/clocks/:id", ClocksController, :update
     get "/clocks/:userID", ClocksController, :retrieve
+
+    get "/roles",  RolesController, :retrieve
+    post "/roles", RolesController, :create
+
+    get "/teams",  TeamsController, :retrieve
+    get "/teams/:userID",  TeamsController, :retrievewithid
+    post "/teams/:userID", TeamsController, :create
+
+    get "/teamMember/:teamID", TeamMemberController, :retrieve
+    post "/teamMember/:userID/:teamID", TeamMemberController, :addteammember
+
   end
 end
