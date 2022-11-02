@@ -1,23 +1,22 @@
-defmodule Api.Teams do
+defmodule Api.Member do
   use Ecto.Schema
 
   import Ecto.Changeset
   import Ecto.Query
 
-  alias Api.Teams
+  alias Api.Member
   alias Api.User
   alias Api.Repo
 
-  @derive {Jason.Encoder, only: [:team_name, :user, :id]}
-  schema "teams" do
-    field :team_name, :string
+  @derive {Jason.Encoder, only: [:team, :user, :id]}
+  schema "team_member" do
+    field :team, :id
     field :user, :id
   end
 
-  def changeset(teams, attrs) do
-    teams
-    |> cast(attrs, [:team_name, :user])
-    |> validate_required([:team_name])
+  def changeset(team_member, attrs) do
+    team_member
+    |> cast(attrs, [:user, :team])
   end
 
 end
