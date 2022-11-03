@@ -6,7 +6,6 @@ defmodule Api.User do
 
   alias Api.User
   alias Api.Repo
-  alias Api.Roles
 
   @derive {Jason.Encoder, only: [:email, :username, :id, :inserted_at, :updated_at, :role_id]}
   schema "users" do

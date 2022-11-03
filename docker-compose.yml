@@ -1,0 +1,55 @@
+version: '3.6'
+services:
+  db_dev:
+    image: "postgres:latest"
+    environment:
+      PGDATA: /var/lib/postgresql/data/pgdata
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: db_dev
+      POSTGRES_HOST_AUTH_METHOD: trust
+    restart: unless-stopped
+    volumes:
+      - 'pgdata:/var/lib/postgresql/data'
+
+  admin_dev:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.org
+      PGADMIN_DEFAULT_PASSWORD: admin
+    restart: unless-stopped
+    ports:
+      - "5555:80"
+    depends_on:
+      - db_dev
+
+  api_dev:
+    build:
+      context: "./api"
+      dockerfile: Dockerfile.dev
+    depends_on:
+      - db_dev
+    environment:
+      MIX_ENV: dev
+    env_file:
+      - ./api/.env
+    ports:
+      - '4000:4000'
+    volumes:
+      - ./api:/app
+
+  client_dev:
+    build:
+      context: ./client
+      dockerfile: Dockerfile.dev
+    restart: unless-stopped
+    env_file:
+      - ./client/.env
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./client:/app
+    depends_on:
+      - api_dev
+volumes:
+  pgdata:

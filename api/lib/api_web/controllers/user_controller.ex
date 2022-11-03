@@ -3,9 +3,9 @@ defmodule ApiWeb.UserController do
 
   import Ecto.Query
 
-  alias Api.Clocks
   alias Api.User
   alias Api.Repo
+  alias Api.Clocks
 
   # conn |> render(ApiWeb.WorkingTimesView, "get_working_time.json", %{status: 0, success: 0, message: "Logger: ", content: is_integer(userID)})
 

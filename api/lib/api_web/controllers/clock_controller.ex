@@ -3,9 +3,9 @@ defmodule ApiWeb.ClocksController do
 
   import Ecto.Query
 
-  alias Api.WorkingTimes
   alias Api.Clocks
   alias Api.Repo
+  alias Api.WorkingTimes
 
   def create(conn, %{"status" => status, "time" => time, "user" => userId}) do
     {:ok, dt_struct, utc_offset} = DateTime.from_iso8601(time)
@@ -30,7 +30,6 @@ defmodule ApiWeb.ClocksController do
 
   def update(conn, params) do
     id = params["id"]
-
     if(id !== nil) do
       id = String.to_integer(params["id"])
       clock = Repo.one(from w in Clocks, where: w.id == ^id)

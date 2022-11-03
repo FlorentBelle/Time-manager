@@ -1,7 +1,7 @@
 defmodule ApiWeb.Endpoint do
   use Phoenix.Endpoint, otp_app: :api
 
-  plug CORSPlug, origin: ["http://localhost:5173", "http://localhost:5174"]
+  plug CORSPlug, origin: "*"
 
   # The session will be stored in the cookie and signed,
   # this means its contents can be read but not tampered with.

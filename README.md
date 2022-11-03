@@ -174,6 +174,51 @@ $ docker-compose up -d
 
 "-d" flag allow to not get the logs in the terminal
 
+<p>&nbsp;</p>
+
+## <strong>Docker usage for production</strong>
+
+
+### 1. Build no cache prod  :  
+```bash
+$ docker-compose -f docker-compose-prod.yml -p prod build --no-cache
+```
+
+### 2. Up prod containers  :  
+```bash
+$ docker-compose -f docker-compose-prod.yml -p prod up -d
+```
+
+### 3. Migrate prod  :  
+```bash
+$ docker-compose -f docker-compose-prod.yml -p prod exec api_prod api/bin eval "Api.Release.migrate"
+```
+<p>&nbsp;</p>
+
+## <strong>Docker usage for dev</strong>
+
+If you got : error sh: 1: vue-cli-service: not found
+Run :  
+```bash
+$ rm -rf node_modules package-lock.json && npm install
+```
+in your local encironment
+
+### 1. Build no cache dev:  
+```bash
+$ docker-compose -f docker-compose.yml -p dev build --no-cache
+```
+
+### 2. Up dev containers:  
+```bash
+$ docker-compose -f docker-compose.yml -p dev up -d
+```
+
+### 3. Migrate dev:  
+```bash
+$ docker-compose -f docker-compose.yml -p dev exec api_dev mix ecto.migrate
+```
+
 
 <p>&nbsp;</p>
 

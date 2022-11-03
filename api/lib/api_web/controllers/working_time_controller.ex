@@ -53,7 +53,11 @@ defmodule ApiWeb.WorkingTimeController do
         {:ok, dt_struct, utc_offset} = DateTime.from_iso8601(end_)
         end__ = DateTime.truncate(dt_struct, :second)
         retrieved = Repo.all(from w in WorkingTimes, where: w.user == ^userID, where: w.start >= ^start__, where: w.end <= ^end__)
-        conn |> render(ApiWeb.WorkingTimesView, "working_time_view.json", %{status: 200, success: true, message: "All workingtime retrieved for the query parameters", content: retrieved})
+        if(length(retrieved) > 0) do
+          conn |> render(ApiWeb.WorkingTimesView, "working_time_view.json", %{status: 200, success: true, message: "All workingtime retrieved for the query parameters", content: retrieved})
+        else
+          conn |> render(ApiWeb.ErrorView, "error.json", status: 403, error: "No working times found")
+        end
       end
     end
     if ((is_integer(userID) || is_bitstring(userID)) &&  userID !== nil) do

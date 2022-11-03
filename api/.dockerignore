@@ -1,0 +1,4 @@
+deps/
+**/*.nosync
+**/*.md
+**/*.dump

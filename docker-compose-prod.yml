@@ -1,0 +1,51 @@
+version: "3"
+services:
+  db_prod:
+    image: "postgres:latest"
+    environment:
+      - POSTGRES_PASSWORD=j0BXOO5E6nbVlKqHSjxFOv4s5UEhf33xdLrgvLOcBIQeD4DkIOToIVR2U7qhs
+      - POSTGRES_USER=root
+      - POSTGRES_DB=db_prod
+      - PGDATA=/var/lib/postgresql/data/pgdataprod
+    restart: unless-stopped
+    volumes:
+      - 'pgdataprod:/var/lib/postgresql/data'
+
+  adminer_prod:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.org
+      PGADMIN_DEFAULT_PASSWORD: admin
+    restart: unless-stopped
+    ports:
+      - "5556:80"
+    depends_on:
+      - db_prod
+
+  api_prod:
+    build:
+      context: "./api"
+      dockerfile: Dockerfile
+    env_file:
+      - ./api/.env
+    restart: unless-stopped
+    volumes:
+      - ./api:/app
+    ports:
+      - '4001:4001'
+    depends_on:
+      - db_prod
+  
+  client_prod:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    env_file:
+      - ./client/.env.prod
+    ports:
+      - "8081:80"
+    depends_on:
+      - api_prod
+volumes:
+  pgdataprod:

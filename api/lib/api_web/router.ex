@@ -48,6 +48,5 @@ defmodule ApiWeb.Router do
 
     get "/teamMember/:teamID", TeamMemberController, :retrieve
     post "/teamMember/:userID/:teamID", TeamMemberController, :addteammember
-
   end
 end
