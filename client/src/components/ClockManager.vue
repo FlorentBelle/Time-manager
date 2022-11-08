@@ -24,17 +24,15 @@
       },
       methods: {
         getWorkingTimesUser: function() {
-          // if (true === true) {
-            // const id = this.$$store.state.userConnected.id
-            fetch(process.env.VUE_APP_API_URL + "/workingtimes/1", {
-              mode: 'cors',
-              headers: {
-                "Content-type": "application/json; charset=UTF-8"
-              }
-            })
-            .then(response => response.json())
-            .then(json => console.log(json));
-          // }
+          fetch(process.env.VUE_APP_API_URL + "/workingtimes/1", {
+            mode: 'cors',
+            headers: {
+              "Content-type": "application/json; charset=UTF-8",
+              "Authorization": JSON.parse(localStorage.session).token
+            }
+          })
+          .then(response => response.json())
+          // .then(json => console.log(json));
         }
       }
   }

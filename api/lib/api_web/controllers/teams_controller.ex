@@ -7,6 +7,9 @@ defmodule ApiWeb.TeamsController do
   alias Api.User
 
   def create(conn, params) do
+    if(conn.assigns == %{}) do
+      conn |> render(ApiWeb.ErrorView, "error.json", %{status: 401, error: "Unauthorize"})
+    else
       teamname = params["team_name"]
       userId = params["userID"]
       user = Repo.one(from u in User, where: u.id == ^userId)
@@ -16,26 +19,34 @@ defmodule ApiWeb.TeamsController do
       else
         conn |> render(ApiWeb.ErrorView, "error.json", status: 403, error: "Team can not be insered")
       end
-
-
+    end
   end
 
   def retrieve(conn, params) do
-    retrieved = Repo.all(Teams)
-    if (retrieved !== nil && retrieved !== []) do
-      conn |> render(ApiWeb.TeamsView, "get_teams.json", %{status: "200", success: true, message: "teams found", content: retrieved})
+    if(conn.assigns == %{}) do
+      conn |> render(ApiWeb.ErrorView, "error.json", %{status: 401, error: "Unauthorize"})
     else
-      conn |> render(ApiWeb.ErrorView, "error.json", %{status: "403", error: "No teams Found"})
+      retrieved = Repo.all(Teams)
+      if (retrieved !== nil && retrieved !== []) do
+        conn |> render(ApiWeb.TeamsView, "get_teams.json", %{status: "200", success: true, message: "teams found", content: retrieved})
+      else
+        conn |> render(ApiWeb.ErrorView, "error.json", %{status: "403", error: "No teams Found"})
+      end
     end
   end
 
   def retrievewithid(conn, params) do
-    userId = params["userID"]
-    retrieved = Repo.all(from t in Teams, where: t.user == ^userId)
-    if (retrieved !== nil && retrieved !== []) do
-      conn |> render(ApiWeb.TeamsView, "get_teams.json", %{status: "200", success: true, message: "teams found", content: retrieved})
+    if(conn.assigns == %{}) do
+      conn |> render(ApiWeb.ErrorView, "error.json", %{status: 401, error: "Unauthorize"})
     else
-      conn |> render(ApiWeb.ErrorView, "error.json", %{status: "403", error: "No teams Found"})
+      userId = params["userID"]
+      retrieved = Repo.all(from t in Teams, where: t.user == ^userId)
+      if (retrieved !== nil && retrieved !== []) do
+        conn |> render(ApiWeb.TeamsView, "get_teams.json", %{status: "200", success: true, message: "teams found", content: retrieved})
+      else
+        conn |> render(ApiWeb.ErrorView, "error.json", %{status: "403", error: "No teams Found"})
+      end
     end
   end
+  
 end

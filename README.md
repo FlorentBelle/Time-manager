@@ -191,7 +191,13 @@ $ docker-compose -f docker-compose-prod.yml -p prod up -d
 
 ### 3. Migrate prod  :  
 ```bash
-$ docker-compose -f docker-compose-prod.yml -p prod exec api_prod api/bin eval "Api.Release.migrate"
+$ docker-compose -f docker-compose-prod.yml -p prod exec api_prod bin/api eval "Api.Release.migrate"
+```
+
+### 4. Init db prod: 
+Generic command : docker exec -u postgresuser containername psql dbname postgresuser -f /container/path/file.sql
+```bash
+$ docker-compose -f docker-compose-prod.yml -p prod exec -u root db_prod psql db_prod root -f /docker-entrypoint-initdb.d/init.sql
 ```
 <p>&nbsp;</p>
 
@@ -218,6 +224,13 @@ $ docker-compose -f docker-compose.yml -p dev up -d
 ```bash
 $ docker-compose -f docker-compose.yml -p dev exec api_dev mix ecto.migrate
 ```
+### 4. Init db dev: 
+Generic command : docker exec -u postgresuser containername psql dbname postgresuser -f /container/path/file.sql
+```bash
+$ docker-compose -f docker-compose.yml -p dev exec -u postgres db_dev psql db_dev postgres -f /docker-entrypoint-initdb.d/init.sql
+```
+
+
 
 
 <p>&nbsp;</p>

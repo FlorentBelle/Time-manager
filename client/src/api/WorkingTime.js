@@ -6,7 +6,8 @@ export default {
             const response = await fetch(`${process.env.VUE_APP_API_URL}/workingtimes/${userId}?start=${start}&end=${end}`, {
                 mode: 'cors',
                 headers: {
-                    "Content-type": "application/json; charset=UTF-8"
+                    "Content-type": "application/json; charset=UTF-8",
+                    "Authorization": JSON.parse(localStorage.session).token
                 }
             });
             return response.json()
@@ -14,7 +15,8 @@ export default {
             const response = await fetch(`${process.env.VUE_APP_API_URL}/workingtimes/${userId}?start=${start}`, {
                 mode: 'cors',
                 headers: {
-                    "Content-type": "application/json; charset=UTF-8"
+                    "Content-type": "application/json; charset=UTF-8",
+                    "Authorization": JSON.parse(localStorage.session).token
                 }
             });
             return response.json()
@@ -22,7 +24,8 @@ export default {
             const response = await fetch(`${process.env.VUE_APP_API_URL}/workingtimes/${userId}?end=${end}`, {
                 mode: 'cors',
                 headers: {
-                    "Content-type": "application/json; charset=UTF-8"
+                    "Content-type": "application/json; charset=UTF-8",
+                    "Authorization": JSON.parse(localStorage.session).token
                 }
             });
             return response.json()
@@ -30,7 +33,8 @@ export default {
             const response = await fetch(`${process.env.VUE_APP_API_URL}/workingtimes/${userId}`, {
                 mode: 'cors',
                 headers: {
-                    "Content-type": "application/json; charset=UTF-8"
+                    "Content-type": "application/json; charset=UTF-8",
+                    "Authorization": JSON.parse(localStorage.session).token
                 }
             });
             return response.json()
@@ -40,7 +44,8 @@ export default {
         const response = await fetch(`${process.env.VUE_APP_API_URL}/users/${userId}/workingtimes/${workingTimeId}`, {
         mode: 'cors',
         headers: {
-            "Content-type": "application/json; charset=UTF-8"
+            "Content-type": "application/json; charset=UTF-8",
+            "Authorization": JSON.parse(localStorage.session).token
         }
         });
         return response.json()
@@ -50,7 +55,8 @@ export default {
         method: 'POST',
         mode: 'cors',
         headers: {
-            "Content-type": "application/json; charset=UTF-8"
+            "Content-type": "application/json; charset=UTF-8",
+            "Authorization": JSON.parse(localStorage.session).token
         },
         body: JSON.stringify(workingTime)
         });
@@ -61,7 +67,8 @@ export default {
         method: 'PUT',
         mode: 'cors',
         headers: {
-            "Content-type": "application/json; charset=UTF-8"
+            "Content-type": "application/json; charset=UTF-8",
+            "Authorization": JSON.parse(localStorage.session).token
         },
         body: JSON.stringify(workingTime)
         });
@@ -72,9 +79,20 @@ export default {
         method: 'DELETE',
         mode: 'cors',
         headers: {
-            "Content-type": "application/json; charset=UTF-8"
+            "Content-type": "application/json; charset=UTF-8",
+            "Authorization": JSON.parse(localStorage.session).token
         }
         });
+        return response.json()
+    },
+    retrieveWorkingTimeByTeam: async function(team_id, start, end) {
+        const response = await fetch(`${process.env.VUE_APP_API_URL}/workingtimesTeams/${team_id}`, {
+            mode: 'cors',
+            headers: {
+                "Content-type": "application/json; charset=UTF-8",
+                "Authorization": JSON.parse(localStorage.session).token
+            }
+            });
         return response.json()
     }
 }

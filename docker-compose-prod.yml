@@ -10,7 +10,8 @@ services:
     restart: unless-stopped
     volumes:
       - 'pgdataprod:/var/lib/postgresql/data'
-
+      - './bdd/init.sql:/docker-entrypoint-initdb.d/init.sql'
+  
   adminer_prod:
     image: dpage/pgadmin4
     environment:
@@ -42,7 +43,7 @@ services:
       dockerfile: Dockerfile
     restart: unless-stopped
     env_file:
-      - ./client/.env.prod
+      - ./client/.env.production
     ports:
       - "8081:80"
     depends_on:

@@ -11,12 +11,16 @@
       <h5 class="login-form-title">Login</h5>
       <div class="login-form-fields">
         <div class="login-form-field">
+          <label for="Username">Username</label>
+          <input id="Username" type="text" v-model="user.username">
+        </div>
+        <div class="login-form-field">
           <label for="Email">Email</label>
           <input id="Email" type="text" v-model="user.email">
         </div>
         <div class="login-form-field">
-          <label for="Username">Username</label>
-          <input id="Username" type="text" v-model="user.username">
+          <label for="password">Password</label>
+          <input id="password" type="password" v-model="user.password">
         </div>
       </div>
       <div class="login-form-buttons">
@@ -35,13 +39,20 @@
         user: {
           username:"",
           id: "",
-          email: ""
+          email: "",
+          password: "",
+          isAuthoriseAdmin: false,
+          isAuthoriseManager: false,
+          token: ""
         },
         session: {
           active: false,
           id: null,
           username: '',
-          email: ''
+          email: '',
+          isAuthoriseAdmin: false,
+          isAuthoriseManager: false,
+          token: ""
         }
       }
     },
@@ -55,12 +66,13 @@
     },
     methods: {
       createUser: function() {
-        fetch(process.env.VUE_APP_API_URL + "/users", {
+        fetch(process.env.VUE_APP_API_URL + "/auth/register", {
               mode: 'cors',
               method: "POST",
               body: JSON.stringify({
                 username: this.user.username,
-                email: this.user.email
+                email: this.user.email,
+                password: this.user.password
               }),
               headers: {
                   "Content-type": "application/json; charset=UTF-8"
@@ -69,14 +81,10 @@
           .then(response => response.json())
           .then(response => {
             if(response.success) {
-              console.log(response)
               this.$toast.success('User created !', {
                   position: "top-right"
               });
-              this.registerUser(true, response.content.user.id, response.content.user.username, response.content.user.email)
-              router.replace('/home')
             } else {
-              console.log(response)
               this.$toast.error(response.error, {
                 position: "top-right"
               });
@@ -84,21 +92,27 @@
           });
       },
       getUser: function() {
-        fetch(process.env.VUE_APP_API_URL + "/users?username=" + this.user.username + "&email=" + this.user.email, {
+        fetch(process.env.VUE_APP_API_URL + "/auth/login", {
               mode: 'cors',
+              method: "POST",
+              body: JSON.stringify({
+                username: this.user.username,
+                email: this.user.email,
+                password: this.user.password
+              }),
               headers: {
                   "Content-type": "application/json; charset=UTF-8"
               }
           })
           .then(response => response.json())
           .then(response => {
-            if(response.success && response.content.length === 1) {
-              this.$toast.success('Login succes !', {
+            if(response.success) {
+              this.$toast.success(response.message, {
                   position: "top-right"
               });
-              this.registerUser(true, response.content[0].id, response.content[0].username, response.content[0].email)
-              router.push('/home')
-            } else {
+                this.registerUser(true, response.user.id, response.user.username, response.user.email, response.user.isAuthoriseAdmin, response.user.isAuthoriseManager, response.token)
+                router.push('/home')
+              } else {
               this.$toast.error(response.error, {
                 position: "top-right"
               });
@@ -106,13 +120,16 @@
           }
         )
       },
-      registerUser: function(active, id, username, email) {
+      registerUser: function(active, id, username, email, isAuthoriseAdmin, isAuthoriseManager, token) {
         if(this.checkUserInfos(active, id, username, email)) {
           const newSession = {
             active: active,
             id: id,
             username: username,
-            email: email
+            email: email,
+            isAuthoriseAdmin: isAuthoriseAdmin,
+            isAuthoriseManager: isAuthoriseManager,
+            token: token
           }
           this.session = newSession
           localStorage.session = JSON.stringify(newSession)
@@ -121,7 +138,10 @@
             active: false,
             id: null,
             username: '',
-            email: ''
+            email: '',
+            isAuthoriseAdmin: false,
+            isAuthoriseManager: false,
+            token: ''
           }
           this.session = newSession
           localStorage.session = JSON.stringify(newSession)
@@ -155,7 +175,7 @@
     align-items: center;
     .login-form {
       width: 20em;
-      height: 30em;
+      height: 33em;
       margin: auto;
       background-color: var(--bg-4);
       border-radius: 10px;
@@ -228,7 +248,7 @@
         .login-form-button-connect {
           border: none;
           padding: 5px;
-          background-color: var(--color-3);
+          background-color: var(--color-4);
           border-radius: 10px;
           color: var(--color-2);
           margin-bottom: 20px;

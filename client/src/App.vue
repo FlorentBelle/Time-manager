@@ -14,7 +14,10 @@ export default {
         active: false,
         id: null,
         username: '',
-        email: ''
+        email: '',
+        isAuthoriseAdmin: "",
+        isAuthoriseManager: "",
+        token: ""
       }
     }
   },

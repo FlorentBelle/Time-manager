@@ -129,53 +129,111 @@ export default {
       await this.show(this.startV, this.endV)
     },
     async show(start, end) {
-      const userID=this.$route.params.userID
-      const res = await WorkingTime.getAllWorkingTimesUser(userID, start, end)
-      const getWeekWorkTimeResult = tools.getWeekWorkTime(res.content)
-      this.weekWorkingTime = getWeekWorkTimeResult.weekWorkTimeByDay
-      this.totalWeekWorkTime = getWeekWorkTimeResult.totalWeekWorkTime
-      if (this.totalWeekWorkTime < 35) {
-        this.colorWeek = "red-text"
-      } else {
-        this.colorWeek = "green-text"
-      }
-      this.startShow = start.slice(0, 10)
-      this.endShow = end.slice(0, 10)
-      this.labelsDates = tools.getDaysList(start)
-      this.chartData = {
-        labels: this.labelsDates,
-        datasets: [ { 
-          data: this.weekWorkingTime,
-          backgroundColor:[
-          'rgba(255, 99, 132, 0.2)',
-          'rgba(255, 159, 64, 0.2)',
-          'rgba(255, 205, 86, 0.2)',
-          'rgba(75, 192, 192, 0.2)',
-          'rgba(54, 162, 235, 0.2)',
-          'rgba(153, 102, 255, 0.2)',
-          'rgba(20, 222, 207, 0.2)'
-          ],
-          borderColor: [
-          'rgb(255, 99, 132)',
-          'rgb(255, 159, 64)',
-          'rgb(255, 205, 86)',
-          'rgb(75, 192, 192)',
-          'rgb(54, 162, 235)',
-          'rgb(153, 102, 255)',
-          'rgb(201, 203, 207)'
-          ],
-          borderWidth: 1,
-        }]
-      }
-      this.chartOptions = {
-        responsive: true,
-        maintainAspectRatio: false,       
-        plugins: {
-          legend: {
-              display: false,
+      const userID = this.$route.params.userID
+      const teamID = this.$route.params.teamID
+
+      if (userID !== undefined) {
+        const res = await WorkingTime.getAllWorkingTimesUser(userID, start, end)
+        const getWeekWorkTimeResult = tools.getWeekWorkTime(res.content)
+        this.weekWorkingTime = getWeekWorkTimeResult.weekWorkTimeByDay
+        this.totalWeekWorkTime = getWeekWorkTimeResult.totalWeekWorkTime
+        if (this.totalWeekWorkTime < 35) {
+          this.colorWeek = "red-text"
+        } else {
+          this.colorWeek = "green-text"
+        }
+        this.startShow = start.slice(0, 10)
+        this.endShow = end.slice(0, 10)
+        this.labelsDates = tools.getDaysList(start)
+        this.chartData = {
+          labels: this.labelsDates,
+              datasets: [ { 
+                data: this.weekWorkingTime,
+                backgroundColor:[
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(255, 159, 64, 0.2)',
+                'rgba(255, 205, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(20, 222, 207, 0.2)'
+                ],
+                borderColor: [
+                'rgb(255, 99, 132)',
+                'rgb(255, 159, 64)',
+                'rgb(255, 205, 86)',
+                'rgb(75, 192, 192)',
+                'rgb(54, 162, 235)',
+                'rgb(153, 102, 255)',
+                'rgb(201, 203, 207)'
+                ],
+                borderWidth: 1,
+              }]
+            }
+        this.chartOptions = {
+          responsive: true,
+          maintainAspectRatio: false,       
+          plugins: {
+            legend: {
+                display: false,
+            }
           }
         }
+
+      }else if (teamID !== null) {
+        const res = await WorkingTime.retrieveWorkingTimeByTeam(teamID, start, end)
+        const getWeekWorkTimeResult = tools.getWeekWorkTime(res.content)
+        this.weekWorkingTime = getWeekWorkTimeResult.weekWorkTimeByDay
+        this.totalWeekWorkTime = getWeekWorkTimeResult.totalWeekWorkTime
+        if (this.totalWeekWorkTime < 35) {
+          this.colorWeek = "red-text"
+        } else {
+          this.colorWeek = "green-text"
+        }
+        this.startShow = start.slice(0, 10)
+        this.endShow = end.slice(0, 10)
+        this.labelsDates = tools.getDaysList(start)
+        this.chartData = {
+          labels: this.labelsDates,
+              datasets: [ { 
+                data: this.weekWorkingTime,
+                backgroundColor:[
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(255, 159, 64, 0.2)',
+                'rgba(255, 205, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(20, 222, 207, 0.2)'
+                ],
+                borderColor: [
+                'rgb(255, 99, 132)',
+                'rgb(255, 159, 64)',
+                'rgb(255, 205, 86)',
+                'rgb(75, 192, 192)',
+                'rgb(54, 162, 235)',
+                'rgb(153, 102, 255)',
+                'rgb(201, 203, 207)'
+                ],
+                borderWidth: 1,
+              }]
+            }
+        this.chartOptions = {
+          responsive: true,
+          maintainAspectRatio: false,       
+          plugins: {
+            legend: {
+                display: false,
+            }
+          }
+        }
+
+
+
       }
+
+      
+      
     },
   },
   async mounted () {

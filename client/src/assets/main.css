@@ -120,3 +120,14 @@
 ::-webkit-resizer  {
 	
 }
+
+.vc-title {
+	color: var(--color-2);
+}
+.vc-weekday {
+	color: var(--color-2);
+}
+
+.vc-svg-icon {
+	fill: var(--color-2) !important;
+}

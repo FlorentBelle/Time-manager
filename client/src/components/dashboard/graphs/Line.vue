@@ -97,12 +97,25 @@
     methods: {
       async showYear(start, end) {
         const userID=this.$route.params.userID
-        const res = await WorkingTime.getAllWorkingTimesUser(userID, start, end)
-        const getWorkingTimeByMonth = tools.getWorkingTimeByMonth(res.content)
-        this.graphData = getWorkingTimeByMonth.weekWorkTimeByMonth
-        this.totalYearWorkTime = getWorkingTimeByMonth.totalYearTime
-        this.year = new Date(start).getFullYear()
-        this.labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July', "August", "September", "October", "November", "December"]
+        const teamID=this.$route.params.teamID
+        if (userID !== undefined) {
+          const res = await WorkingTime.getAllWorkingTimesUser(userID, start, end)
+          const getWorkingTimeByMonth = tools.getWorkingTimeByMonth(res.content)
+          this.graphData = getWorkingTimeByMonth.weekWorkTimeByMonth
+          this.totalYearWorkTime = getWorkingTimeByMonth.totalYearTime
+          this.year = new Date(start).getFullYear()
+          this.labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July', "August", "September", "October", "November", "December"]
+          
+        }
+        else {
+          const res = await WorkingTime.retrieveWorkingTimeByTeam(teamID, start, end)
+          const getWorkingTimeByMonth = tools.getWorkingTimeByMonth(res.content)
+          this.graphData = getWorkingTimeByMonth.weekWorkTimeByMonth
+          this.totalYearWorkTime = getWorkingTimeByMonth.totalYearTime
+          this.year = new Date(start).getFullYear()
+          this.labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July', "August", "September", "October", "November", "December"]
+          
+        }
       },
       async showMonth(month) {
 
@@ -113,8 +126,8 @@
 
       try {
         const thisYearLimits =  tools.getThisYearLimits()
-        this.startV=thisYearLimits.start
-        this.endV=thisYearLimits.end
+        this.startV=thisYearLimits.startThisYear
+        this.endV=thisYearLimits.utcEndThisYear
 
         await this.showYear(this.startV, this.endV)
 

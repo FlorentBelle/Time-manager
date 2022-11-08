@@ -109,26 +109,25 @@
               fetch(process.env.VUE_APP_API_URL + "/users" ,{
               mode: 'cors',
               headers: {
-                "Content-type": "application/json; charset=UTF-8"
+                "Content-type": "application/json; charset=UTF-8",
+                "Authorization": JSON.parse(localStorage.session).token
               }
             })
             .then(response => response.json())
             .then(json => {
-              console.log("users : ", json)
               this.users = json.content
-              
             })
         },
         getRoles: function() {
             fetch(process.env.VUE_APP_API_URL + "/roles" ,{
               mode: 'cors',
               headers: {
-                "Content-type": "application/json; charset=UTF-8"
+                "Content-type": "application/json; charset=UTF-8",
+                "Authorization": JSON.parse(localStorage.session).token
               }
             })
             .then(response => response.json())
             .then(json => {
-              console.log("roles :  : ", json)
               this.roles = json.content
             })
         },
@@ -140,30 +139,31 @@
                 role_name:this.newrole
                 }),
               headers: {
-                "Content-type": "application/json; charset=UTF-8"
+                "Content-type": "application/json; charset=UTF-8",
+                "Authorization": JSON.parse(localStorage.session).token
               }
             })
             .then(response => response.json())
-            .then(json => {
-              console.log("newrole : ", json)
-            })
+            // .then(json => {
+            //   console.log("newrole : ", json)
+            // })
         },
         modifyUser: function(roles) {
-          console.log(roles.role_id);
-              fetch(process.env.VUE_APP_API_URL + "/users/" + roles.id ,{
-              method:'PUT',
-              mode: 'cors',
-              body: JSON.stringify({
-                role_id: roles.role_id
-                }),
-              headers: {
-                "Content-type": "application/json; charset=UTF-8"
-              }
-            })
-            .then(response => response.json())
-            .then(json => {
-              console.log("newrole : ", json)
-            })
+          fetch(process.env.VUE_APP_API_URL + "/users/" + roles.id ,{
+            method:'PUT',
+            mode: 'cors',
+            body: JSON.stringify({
+              role_id: roles.role_id
+              }),
+            headers: {
+              "Content-type": "application/json; charset=UTF-8",
+              "Authorization": JSON.parse(localStorage.session).token
+            }
+          })
+          .then(response => response.json())
+          // .then(json => {
+          //   console.log("newrole : ", json)
+          // })
         }
       }
   };

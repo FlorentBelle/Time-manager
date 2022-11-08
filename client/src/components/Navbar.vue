@@ -89,16 +89,34 @@
       }
     },
     methods: {
-      unregisterUser: function() {
+      unregisterUser: async function() {
         const newSession = {
-            active: false,
-            id: null,
-            username: '',
-            email: ''
+          active: false,
+          id: null,
+          username: '',
+          email: '',
+          isAuthoriseAdmin: false,
+          isAuthoriseManager: false,
+          token: ""
+        }
+        const response = await fetch(process.env.VUE_APP_API_URL + "/logout", {
+              mode: 'cors',
+              method: 'DELETE',
+              headers: {
+                "Content-type": "application/json; charset=UTF-8",
+                "Authorization": JSON.parse(localStorage.session).token
+              }
+        })
+        const { status: status, success: success, message: message } = await response.json()
+        if(success) {
+          this.$toast.success(message, {position: "top-right"})
+        } else {
+          this.$toast.error(error, {position: "top-right"})
         }
         localStorage.session = JSON.stringify(newSession)
         this.session = newSession
         router.push('/')
+
       },
     }
   }
@@ -138,7 +156,11 @@
         .navbar-menu-item {
           svg {
             width: 26px;
-            fill: var(--color-2)
+            fill: var(--color-2);
+            transition: transform .2s; /* Animation */
+            &:hover {
+              transform: scale(1.5);
+            }
           }
         }
       }
@@ -152,7 +174,14 @@
       margin-bottom: 30px;
       svg {
         width: 24px;
-        fill: var(--color-2)
+        fill: var(--color-2);
+        transition: transform .2s; /* Animation */
+          &:hover {
+            transform: scale(1.5);
+          }
+      }
+      &:hover {
+        cursor: pointer;
       }
     }
   }

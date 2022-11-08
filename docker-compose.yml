@@ -11,6 +11,7 @@ services:
     restart: unless-stopped
     volumes:
       - 'pgdata:/var/lib/postgresql/data'
+      - './bdd/init.sql:/docker-entrypoint-initdb.d/init.sql'
 
   admin_dev:
     image: dpage/pgadmin4

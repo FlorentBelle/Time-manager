@@ -6,22 +6,22 @@
             </div>
         </div>
         <div class="nav-dashboard">
-            <router-link :to="{path: `/chart_manager/${userID}`}">
+            <router-link :to="{path: `/${path}/${idToGo}`}">
                 <button class="app-button">
                     All
                 </button>
             </router-link>
-            <router-link :to="{path: `/chart_manager/${userID}/bar`}">
+            <router-link :to="{path: `/${path}/${idToGo}/bar`}">
                 <button class="app-button">
                     Week
                 </button>
             </router-link>
-            <router-link :to="{path: `/chart_manager/${userID}/line`}">
+            <router-link :to="{path: `/${path}/${idToGo}/line`}">
                 <button class="app-button">
                     Year
                 </button>
             </router-link>
-            <router-link :to="{path: `/chart_manager/${userID}/doughnut`}">
+            <router-link :to="{path: `/${path}/${idToGo}/doughnut`}">
                 <button class="app-button">
                     Day
                 </button>
@@ -35,8 +35,29 @@
 export default {
   data: function() {
        return {
-            userID: JSON.parse(localStorage.session).id
+            userID: JSON.parse(localStorage.session).id,
+            user: false,
+            team: false,
+            path: '',
+            idToGo: -1
         }
+    },
+    mounted () {
+        this.getFunction();
+    },
+    methods: {
+        getFunction: function () {
+            const userID=this.$route.params.userID
+            const teamID=this.$route.params.teamID
+            if (userID !== undefined) {
+                this.path = 'chart_manager'
+                this.idToGo = userID
+            }
+            else {
+                this.path = 'chart_managerTeam'
+                this.idToGo = teamID
+            }
+        },
     }
 }
 </script>

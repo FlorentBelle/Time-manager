@@ -3,8 +3,24 @@ import moment from "moment-timezone";
 const timezone = 'Europe/Amsterdam'
 
 export default {
-    convertLocalToGMT: function (uctLocalDate, withMicro) {
-        const isoDate = new Date(uctLocalDate).toISOString()
+    convertLocalToGMT: function (uctLocalDate, withMicro, stoe) {
+        var isoDate;
+        if (stoe === true) {
+            isoDate = new Date(uctLocalDate)
+            isoDate.setHours(1,0,0);
+            isoDate = isoDate.toISOString();
+        }
+        else  if (stoe === false) {
+            isoDate = new Date(uctLocalDate)
+            isoDate.setDate(isoDate.getDate() + 1)
+            isoDate.setHours(0, 59,59);
+            isoDate = isoDate.toISOString();
+        }
+        else {
+            var isoDate = new Date()
+            isoDate = new Date(uctLocalDate).toISOString();
+        }
+        
         return withMicro ? isoDate.toString() : isoDate.toString().replace('.' + isoDate.toString().split('.')[1], 'Z')
     },
     getWeekList: function (list) {
@@ -72,7 +88,7 @@ export default {
 
         let start = new Date()
         let end = new Date()
-        if (day ==0) {
+        if (day == 0) {
             start.setDate(start.getDate() -6)
         } else {
             start.setDate(start.getDate() - day + 1)
@@ -85,12 +101,11 @@ export default {
         start= moment(start).tz(timezone).format()
         end= moment(end).tz(timezone).format()
 
-        const utcStart = this.convertLocalToGMT(start, false)
-        const utcEnd = this.convertLocalToGMT(end, false)
+        const utcStart = this.convertLocalToGMT(start, false, true)
+        const utcEnd = this.convertLocalToGMT(end, false, false)
 
         start = start.split('T')[0] + " " + start.split('T')[1].slice(0,8)
         end = end.split('T')[0] + " " + end.split('T')[1].slice(0,8)
-
         return ({
             start: start,
             end: end,
@@ -108,12 +123,9 @@ export default {
         startThisYear = moment(startThisYear).tz(timezone).format()
         endThisYear = moment(endThisYear).tz(timezone).format()
       
-        const utcStartThisYear = this.convertLocalToGMT(startThisYear, false)
-        const utcEndThisYear = this.convertLocalToGMT(endThisYear, false)
-
-        startThisYear = startThisYear.split('T')[0] + " " + startThisYear.split('T')[1].slice(0,8)
-        endThisYear = endThisYear.split('T')[0] + " " + endThisYear.split('T')[1].slice(0,8)
-
+        const utcStartThisYear = this.convertLocalToGMT(startThisYear, false, true)
+        const utcEndThisYear = this.convertLocalToGMT(endThisYear, false, false)
+        startThisYear = startThisYear.slice(0,19) + 'Z'
         return ({
             startThisYear: startThisYear, 
             endThisYear: endThisYear, 
@@ -129,8 +141,8 @@ export default {
         start = moment(start).tz(timezone).format()
         end = moment(end).tz(timezone).format()
 
-        const utcStart = this.convertLocalToGMT(start, false)
-        const utcEnd = this.convertLocalToGMT(end, false)
+        const utcStart = this.convertLocalToGMT(start, false, true)
+        const utcEnd = this.convertLocalToGMT(end, false, false)
 
         start = start.split('T')[0] + " " + start.split('T')[1].slice(0,8)
         end = end.split('T')[0] + " " + end.split('T')[1].slice(0,8)
@@ -271,89 +283,3 @@ export default {
     },
     timezone: timezone
 }
-
-
-
-// const test = [
-//     {
-//         end: "2022-10-28T18:05:23",
-//         id: 12,
-//         start: "2022-10-28T14:05:23",
-//         user: 1
-//     },
-//     {
-//         end: "2022-10-28T12:05:23",
-//         id: 9,
-//         start: "2022-10-28T09:05:23",
-//         user: 1
-//     },
-//     {
-//         end: "2022-10-24T12:05:23",
-//         id: 5,
-//         start: "2022-10-24T09:05:23",
-//         user: 1
-//     },
-//     {
-//         end: "2022-10-25T12:05:23",
-//         id: 6,
-//         start: "2022-10-25T09:05:23",
-//         user: 1
-//     },
-//     {
-//         end: "2022-10-25T18:05:23",
-//         id: 12,
-//         start: "2022-10-25T14:05:23",
-//         user: 1
-//     },
-//     {
-//         end: "2022-10-26T12:05:23",
-//         id: 7,
-//         start: "2022-10-26T09:05:23",
-//         user: 1
-//     },
-//     {
-//         end: "2022-10-27T12:05:23",
-//         id: 8,
-//         start: "2022-10-27T09:05:23",
-//         user: 1
-//     },
-//     {
-//         end: "2022-10-29T12:05:23",
-//         id: 10,
-//         start: "2022-10-29T09:05:23",
-//         user: 1
-//     },
-//     {
-//         end: "2022-10-30T12:05:23",
-//         id: 11,
-//         start: "2022-10-30T09:05:23",
-//         user: 1
-//     },
-//     {
-//         end: "2022-10-27T18:05:23",
-//         id: 13,
-//         start: "2022-10-27T14:05:23",
-//         user: 1
-//     },
-//     {
-//         end: "2022-10-26T18:05:23",
-//         id: 14,
-//         start: "2022-10-26T14:05:23",
-//         user: 1
-//     },
-//     {
-//         end: "2022-10-25T18:05:23",
-//         id: 15,
-//         start: "2022-10-25T14:05:23",
-//         user: 1
-//     },
-//     {
-//         end: "2022-10-24T18:05:23",
-//         id: 16,
-//         start: "2022-10-24T14:05:23",
-//         user: 1
-//     }
-// ]
-
-// let result = getDayEndTimes(test)
-// console.log(result)

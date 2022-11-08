@@ -94,8 +94,8 @@
       async changeDay() {
         this.dayShow = this.day
         if(this.day) {
-          this.startV = tools.convertLocalToGMT(moment(this.day + "T00:00:00").tz(tools.timezone).format(), false)
-          this.endV = tools.convertLocalToGMT(moment(this.day + "T23:59:59").tz(tools.timezone).format(), false)
+          this.startV = tools.convertLocalToGMT(moment(this.day + "T00:00:00").tz(tools.timezone).format(), false, true)
+          this.endV = tools.convertLocalToGMT(moment(this.day + "T23:59:59").tz(tools.timezone).format(), false, false)
           await this.show(this.startV, this.endV)
         } else {
           window.alert("Please enter a valid date")
@@ -103,41 +103,84 @@
       },
       async show(start, end) {
         const userID=this.$route.params.userID
-        const res = await WorkingTime.getAllWorkingTimesUser(userID, start, end)
-        if(res.success) {
-          const getDayStatsResult = tools.getDayStats(res.content)
-          this.break = getDayStatsResult.break.toFixed(1)
-          this.work = getDayStatsResult.work.toFixed(1)
-          this.off = getDayStatsResult.off.toFixed(1)
-          this.chartData = {
-            labels: ['Working', 'Break', 'Off'],
-            datasets: [
-              {
-                backgroundColor: ['#41B883', '#E46651', '#00D8FF'],
-                data: [this.work, this.break, this.off]
-              }
-            ]
+        const teamID=this.$route.params.teamID
+        if (userID !== undefined) {
+          const res = await WorkingTime.getAllWorkingTimesUser(userID, start, end)
+          if(res.success) {
+            const getDayStatsResult = tools.getDayStats(res.content)
+            this.break = getDayStatsResult.break.toFixed(1)
+            this.work = getDayStatsResult.work.toFixed(1)
+            this.off = getDayStatsResult.off.toFixed(1)
+            this.chartData = {
+              labels: ['Working', 'Break', 'Off'],
+              datasets: [
+                {
+                  backgroundColor: ['#41B883', '#E46651', '#00D8FF'],
+                  data: [this.work, this.break, this.off]
+                }
+              ]
+            }
+            this.chartOptions = {
+              responsive: true,
+              maintainAspectRatio: false
+            }
+          } else {
+            this.break = 0
+            this.work = 0
+            this.off = 0
+            this.chartData = {
+              labels: ['Working', 'Break', 'Off'],
+              datasets: [
+                {
+                  backgroundColor: ['#41B883', '#E46651', '#00D8FF'],
+                  data: [this.work, this.break, this.off]
+                }
+              ]
+            }
+            this.chartOptions = {
+              responsive: true,
+              maintainAspectRatio: false
+            }
           }
-          this.chartOptions = {
-            responsive: true,
-            maintainAspectRatio: false
           }
-        } else {
-          this.break = 0
-          this.work = 0
-          this.off = 0
-          this.chartData = {
-            labels: ['Working', 'Break', 'Off'],
-            datasets: [
-              {
-                backgroundColor: ['#41B883', '#E46651', '#00D8FF'],
-                data: [this.work, this.break, this.off]
-              }
-            ]
-          }
-          this.chartOptions = {
-            responsive: true,
-            maintainAspectRatio: false
+        else {
+          const res = await WorkingTime.retrieveWorkingTimeByTeam(teamID, start, end)
+
+          if(res.success) {
+            const getDayStatsResult = tools.getDayStats(res.content)
+            this.break = getDayStatsResult.break.toFixed(1)
+            this.work = getDayStatsResult.work.toFixed(1)
+            this.off = getDayStatsResult.off.toFixed(1)
+            this.chartData = {
+              labels: ['Working', 'Break', 'Off'],
+              datasets: [
+                {
+                  backgroundColor: ['#41B883', '#E46651', '#00D8FF'],
+                  data: [this.work, this.break, this.off]
+                }
+              ]
+            }
+            this.chartOptions = {
+              responsive: true,
+              maintainAspectRatio: false
+            }
+          } else {
+            this.break = 0
+            this.work = 0
+            this.off = 0
+            this.chartData = {
+              labels: ['Working', 'Break', 'Off'],
+              datasets: [
+                {
+                  backgroundColor: ['#41B883', '#E46651', '#00D8FF'],
+                  data: [this.work, this.break, this.off]
+                }
+              ]
+            }
+            this.chartOptions = {
+              responsive: true,
+              maintainAspectRatio: false
+            }
           }
         }
       },
